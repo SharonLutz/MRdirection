@@ -1,0 +1,10 @@
+\name{MRdirection-package}
+\alias{MRdirection-package}
+\alias{MRdirection-pkg}
+\docType{package}
+\title{
+\packageTitle{MRdirection}
+}
+\description{
+\packageDescription{MRdirection}
+}

@@ -1,0 +1,9 @@
+Package: MRdirection
+Type: Package
+Title: Runs the MRdirection function
+Version: 1.0
+Date: 2023-12-06
+Author: Sharon Lutz, Kirsten Voorhies
+Maintainer: Sharon Lutz <smlutz@hsph.harvard.edu>
+Description: The MRdirection package runs the MRdirection function which, using simulations, examines the causal direction returned by multiple MR approaches under different scenarios as specified by the user.
+License: GPL-2
