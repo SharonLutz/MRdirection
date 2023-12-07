@@ -16,11 +16,18 @@ devtools::install_github("SharonLutz/MRdirection")
 First, the SNPs, GX and GY, are generated from a binomial distribution for max(nX, nY) subjects (input nX, nY) for a given vector of minor allele frequencies (input MAF_GX and MAF_GY).
 The true phenotype 1 (Xtrue) is generated from a normal distribution with the variance (input varX) and the mean as follows:
 
-E\[Xtrue \] = $\gamma_0$ + $GX\gamma_GX$ + $GY\gamma_GY$
+E\[Xtrue \] = $\gamma_0$ + $GX\gamma_{GX}$ + $GY\gamma_{GY}$
 
 All of these values are inputted by the user (i.e. the intercept gamma0, and the vectors of genetic effect sizes gammaGX and gammaGY). If there is no measurement error (input measurementError=F), then X=Xtrue. If there is measurement error (input measurementError=T), then the measured phenotype 1 X is generated from the true phenotype 1 Xtrue such that:
 
 E\[Xtrue \] = $\delta_0$ + $\delta_{X}X_{true}$
+
+where $\delta_0$ and $\delta_{X}$ are inputted by the user (input delta0, deltaX). Phenotype 2 Y is generated from a normal distribution with the variance (input varY) and the mean as follows:
+
+E\[Y1 \] = $\beta_0$ + $\beta_X[bX]X_{true}$ + $GX\beta_{GX}$ + $GY\beta_{GY}$
+
+
+
 
 
 
