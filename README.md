@@ -59,13 +59,13 @@ E\[Y1 \] = $\beta_0$ + $\beta_{X}X_{true}$ + $G_Y\beta_{G_Y}$ + $G_X\beta_{G_X}$
 
 ## Example
 Consider an example with 1000 subjects for both X and Y (input nX=1000 and nY=1000) with a MAF_GX of 50 (input MAF_GX=0.5) and MAF_GY of 50 (input MAF_GY=0.5). Consider no pleiotropy, measurement error, or unmeasured counfouding (input measurementError = F, unmeasuredConfounding=F, betaGX=0, gammaGY=0). Then, let X be generated from a normal distribution with a variance of 1 (input varX = 1) and mean such that E\[Xtrue \] = 0 + 1 GX (input gamma0=0, gammaGX=1). Y1 is generated from a normal distribution with a variance of 0.2 (input varY = 0.2) and mean such that E\[Y1 \] = 0 + $\beta_{X}X$ (input beta0 = 0) and beta_{X} varies from 0 to 2 (betaX = c(seq(from = 0, to = 0.5, by=0.1),seq(from = 0.75, to = 2, by=0.25))). The R code to run this example is given below.
-
+```
 library(MRdirection)
-results<-reverseDirection(nSim = 100, nX = 1000, nY=1000, MAF_GX = 0.5, MAF_GY = 0.5, gamma0 = 0, gammaGX = 1, gammaGY = 0, varX = 1, measurementError = F,  
-beta0 = 0, betaX = c(seq(from = 0, to = 0.5, by=0.1),seq(from = 0.75, to = 2, by=0.25)), unmeasuredConfounding=F, varY = 0.2, sig.level = 0.05, 
-SEED = 1, runMethods="All")
+results<-MRdirection(nSim = 100, nX = 1000, nY=1000, MAF_GX = 0.5, MAF_GY = 0.5, gamma0 = 0, gammaGX = 1, gammaGY = 0, varX = 1, measurementError = F, beta0 = 0, betaX = c(seq(from = 0, to = 0.5, by=0.1),seq(from = 0.75, to = 2, by=0.25)), betaGX=rep(0,10), betaGY=rep(0.2,10), unmeasuredConfounding=F, varY = 0.2, sig.level = 0.05, SEED = 1, runMethods="All")
+```
 
-
+```
 round(results$matrix,2)
+```
 
 ## References
