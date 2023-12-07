@@ -8,6 +8,8 @@ devtools::install_github("xue-hr/MRCD")
 devtools::install_github("MRCIEU/TwoSampleMR")
 devtools::install_github("xue-hr/MRcML")
 devtools::install_github("xue-hr/BiDirectCausal")
+
+devtools::install_github("SharonLutz/MRdirection")
 ```
 
 ## Input
