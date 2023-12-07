@@ -28,7 +28,7 @@ where $\delta_0$ and $\delta_{X}$ are inputted by the user (input delta0, deltaX
 
 E\[Y1 \] = $\beta_0$ + $\beta_{X}X_{true}$ + $G_Y\beta_{G_Y}$ + $G_X\beta_{G_X}$
 
-where if $\beta_{\G_X}$ is nonzero then the SNPs $\G_X$ are pleiotropic.
+where if $\beta_{G_X}$ is nonzero then the SNPs $G_X$ are pleiotropic.
 
 All of these values are inputted by the user (i.e. the intercept beta0, the effect of phenotype 1 Xtrue on phenotype 2 as betaX, the vector of the effect of the SNPs $G_X$ directly on phenotype 2 as betaGX, and the vector of the effect of the SNPs $G_Y$ directly on phenotype 2 as betaGY).
 
