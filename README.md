@@ -16,7 +16,7 @@ devtools::install_github("SharonLutz/MRdirection")
 First, the SNPs, GX and GY, are generated from a binomial distribution for max(nX, nY) subjects (input nX, nY) for a given vector of minor allele frequencies (input MAF_GX and MAF_GY).
 The true phenotype 1 (Xtrue) is generated from a normal distribution with the variance (input varX) and the mean as follows:
 
-E\[Xtrue \] = $\gamma_0$ + $\gamma_GX$ + $\gamma_GY$
+E\[Xtrue \] = $\gamma_0$ + $\gamma_{GX}$ + $\gamma_{GY}$
 
 
 
