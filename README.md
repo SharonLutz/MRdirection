@@ -24,7 +24,7 @@ All of these values are inputted by the user (i.e., the intercept gamma0, and th
 
 E\[X\] = $\delta_0$ + $\delta_{X}X_{true}$
 
-where $\delta_0$ and $\delta_{X}$ are inputted by the user (input delta0, deltaX). Phenotype 2 Y is generated from a normal distribution (contY=T) or Bernoulli distribution (contY=F) with the variance (input varY) and the mean as follows:
+where $\delta_0$ and $\delta_{X}$ are input by the user (input delta0, deltaX). Phenotype 2 Y is generated from a normal distribution (contY=T) or Bernoulli distribution (contY=F) with the variance (input varY) and the mean as follows:
 
 E\[Y1\] = $\beta_0$ + $\beta_{X}X_{true}$ + $G_Y\beta_{G_Y}$ + $G_X\beta_{G_X}$
 
