@@ -22,7 +22,7 @@ where if $\gamma_{G_Y}$ is nonzero then the SNPs $G_Y$ are pleiotropic.
 
 All of these values are inputted by the user (i.e., the intercept gamma0, and the vectors of genetic effect sizes gammaGX and gammaGY). If there is no measurement error (input measurementError=F), then $X=Xtrue$. If there is measurement error (input measurementError=T), then the measured phenotype 1 X is generated from the true phenotype 1 $X_{true}$ such that:
 
-E\[Xtrue \] = $\delta_0$ + $\delta_{X}X_{true}$
+E\[X \] = $\delta_0$ + $\delta_{X}X_{true}$
 
 where $\delta_0$ and $\delta_{X}$ are inputted by the user (input delta0, deltaX). Phenotype 2 Y is generated from a normal distribution with the variance (input varY) and the mean as follows:
 
