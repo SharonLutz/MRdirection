@@ -38,6 +38,8 @@ E\[Xtrue\] = $\gamma_0$ + $G_X\gamma_{G_X}$ + $G_Y\gamma_{G_Y}$ + $\gamma_{U}U$
 
 E\[Y1\] = $\beta_0$ + $\beta_{X}X_{true}$ + $G_Y\beta_{G_Y}$ + $G_X\beta_{G_X}$ + $\beta_{U}U$
 
+where $\gamma_{U}$ and $\beta_{U}$ are input by the user (i.e., gammaU and betaU).
+
 After the data are generated, then the MRdirection function runs the specified approaches to determine if the measured exposure X causes the outcome Y. 
 
 The approaches can be specified as the following (input: runMethods):
