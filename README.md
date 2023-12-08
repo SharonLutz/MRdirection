@@ -16,17 +16,17 @@ devtools::install_github("SharonLutz/MRdirection")
 First, the SNPs ($G_X$ and $G_Y$) are generated from a binomial distribution for the max of nX and nY subjects (input nX, nY) for a given vector of minor allele frequencies (input MAF_GX and MAF_GY).
 The true phenotype 1 (Xtrue) is generated from a normal distribution with the variance (input varX) and the mean as follows:
 
-E\[Xtrue \] = $\gamma_0$ + $G_X*\gamma_{G_X}$ + $G_Y*\gamma_{G_Y}$
+E\[Xtrue\] = $\gamma_0$ + $G_X*\gamma_{G_X}$ + $G_Y*\gamma_{G_Y}$
 
 where if $\gamma_{G_Y}$ is nonzero then the SNPs $G_Y$ are pleiotropic.
 
 All of these values are inputted by the user (i.e., the intercept gamma0, and the vectors of genetic effect sizes gammaGX and gammaGY). If there is no measurement error (input measurementError=F), then $X=Xtrue$. If there is measurement error (input measurementError=T), then the measured phenotype 1 X is generated from the true phenotype 1 $X_{true}$ such that:
 
-E\[X \] = $\delta_0$ + $\delta_{X}X_{true}$
+E\[X\] = $\delta_0$ + $\delta_{X}X_{true}$
 
 where $\delta_0$ and $\delta_{X}$ are inputted by the user (input delta0, deltaX). Phenotype 2 Y is generated from a normal distribution with the variance (input varY) and the mean as follows:
 
-E\[Y1 \] = $\beta_0$ + $\beta_{X}X_{true}$ + $G_Y\beta_{G_Y}$ + $G_X\beta_{G_X}$
+E\[Y1\] = $\beta_0$ + $\beta_{X}X_{true}$ + $G_Y\beta_{G_Y}$ + $G_X\beta_{G_X}$
 
 where if $\beta_{G_X}$ is nonzero then the SNPs $G_X$ are pleiotropic.
 
@@ -34,9 +34,9 @@ All of these values are inputted by the user (i.e. the intercept beta0, the effe
 
 If there is unmeasured confounding (unmeasuredConfounding=T) between the exposure X and the outcome Y, then the unmeasured confounder U is generated from a normal distribution with user specified mean and variance (i.e. meanU, varU). Then, the exposure X and outcome Y are generated such that
 
-E\[Xtrue \] = $\gamma_0$ + $G_X\gamma_{G_X}$ + $G_Y\gamma_{G_Y}$ + $\gamma_{U}U$
+E\[Xtrue\] = $\gamma_0$ + $G_X\gamma_{G_X}$ + $G_Y\gamma_{G_Y}$ + $\gamma_{U}U$
 
-E\[Y1 \] = $\beta_0$ + $\beta_{X}X_{true}$ + $G_Y\beta_{G_Y}$ + $G_X\beta_{G_X}$ + $\beta_{U}U$
+E\[Y1\] = $\beta_0$ + $\beta_{X}X_{true}$ + $G_Y\beta_{G_Y}$ + $G_X\beta_{G_X}$ + $\beta_{U}U$
 
 After the data are generated, then the MRdirection function runs the specified approaches to determine if the measured exposure X causes the outcome Y. 
 
@@ -55,7 +55,7 @@ The following approaches can be individually specified in a list as input for ru
 ## Output
 This function outputs matrices of the proportion of simulations where Case 1 (X->Y), Case 2 (Y->X), and Case 3 (inconclusive) are returned for each of the specified approaches. The matrices are also saved to the working directory.
 
-E\[Y1 \] = $\beta_0$ + $\beta_{X}X_{true}$ + $G_Y\beta_{G_Y}$ + $G_X\beta_{G_X}$
+E\[Y1\] = $\beta_0$ + $\beta_{X}X_{true}$ + $G_Y\beta_{G_Y}$ + $G_X\beta_{G_X}$
 
 ## Example
 Consider an example with 1000 subjects for both X and Y (input nX=1000 and nY=1000) with a MAF_GX of 50 (input MAF_GX=0.5) and MAF_GY of 50 (input MAF_GY=0.5). Consider no pleiotropy, measurement error, or unmeasured counfouding (input measurementError = F, unmeasuredConfounding=F, betaGX=0, gammaGY=0). Then, let X be generated from a normal distribution with a variance of 1 (input varX = 1) and mean such that E\[Xtrue \] = 0 + 0.2\*GX (input gamma0=0, gammaGX=0.2). 
