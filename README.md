@@ -20,7 +20,7 @@ E\[Xtrue \] = $\gamma_0$ + $G_X*\gamma_{G_X}$ + $G_Y*\gamma_{G_Y}$
 
 where if $\gamma_{G_Y}$ is nonzero then the SNPs $G_Y$ are pleiotropic.
 
-All of these values are inputted by the user (i.e. the intercept gamma0, and the vectors of genetic effect sizes gammaGX and gammaGY). If there is no measurement error (input measurementError=F), then $X=Xtrue$. If there is measurement error (input measurementError=T), then the measured phenotype 1 X is generated from the true phenotype 1 $X_{true}$ such that:
+All of these values are inputted by the user (i.e., the intercept gamma0, and the vectors of genetic effect sizes gammaGX and gammaGY). If there is no measurement error (input measurementError=F), then $X=Xtrue$. If there is measurement error (input measurementError=T), then the measured phenotype 1 X is generated from the true phenotype 1 $X_{true}$ such that:
 
 E\[Xtrue \] = $\delta_0$ + $\delta_{X}X_{true}$
 
