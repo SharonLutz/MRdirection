@@ -32,7 +32,7 @@ where if $\beta_{G_X}$ is nonzero then the SNPs $G_X$ are pleiotropic.
 
 All of these values are inputted by the user (i.e. the intercept beta0, the effect of phenotype 1 Xtrue on phenotype 2 as betaX, the vector of the effect of the SNPs $G_X$ directly on phenotype 2 as betaGX, and the vector of the effect of the SNPs $G_Y$ directly on phenotype 2 as betaGY).
 
-If there is unmeasured confounding (unmeasuredConfounding=T) between the exposure X and the outcome Y, then the unmeasured confounder U is generated from a normal distribution with user specified mean and variance (i.e. meanU, varU). Then, the exposure X and outcome Y are generated such that
+If there is unmeasured confounding (unmeasuredConfounding=T) between the exposure X and the outcome Y, then the unmeasured confounder U is generated from a normal distribution with user specified mean and variance (i.e., meanU, varU). Then, the exposure X and outcome Y are generated such that
 
 E\[Xtrue\] = $\gamma_0$ + $G_X\gamma_{G_X}$ + $G_Y\gamma_{G_Y}$ + $\gamma_{U}U$
 
