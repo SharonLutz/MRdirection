@@ -14,7 +14,7 @@ devtools::install_github("SharonLutz/MRdirection")
 
 ## Input
 First, the SNPs ($G_X$ and $G_Y$) are generated from a binomial distribution for the max of nX and nY subjects (input nX, nY) for a given vector of minor allele frequencies (input MAF_GX and MAF_GY).
-The true phenotype 1 (Xtrue) is generated from a normal distribution with the variance (input varX) and the mean as follows:
+The true phenotype 1 (Xtrue) is generated from a normal distribution (input contX=T) or Bernoulli distribution (input contX=F) with the variance (input varX) and the mean as follows:
 
 E\[Xtrue\] = $\gamma_0$ + $G_X*\gamma_{G_X}$ + $G_Y*\gamma_{G_Y}$
 
@@ -24,7 +24,7 @@ All of these values are inputted by the user (i.e., the intercept gamma0, and th
 
 E\[X\] = $\delta_0$ + $\delta_{X}X_{true}$
 
-where $\delta_0$ and $\delta_{X}$ are inputted by the user (input delta0, deltaX). Phenotype 2 Y is generated from a normal distribution with the variance (input varY) and the mean as follows:
+where $\delta_0$ and $\delta_{X}$ are inputted by the user (input delta0, deltaX). Phenotype 2 Y is generated from a normal distribution (contY=T) or Bernoulli distribution (contY=F) with the variance (input varY) and the mean as follows:
 
 E\[Y1\] = $\beta_0$ + $\beta_{X}X_{true}$ + $G_Y\beta_{G_Y}$ + $G_X\beta_{G_X}$
 
