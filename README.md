@@ -57,7 +57,6 @@ The following approaches can be individually specified in a list as input for ru
 ## Output
 This function outputs matrices of the proportion of simulations where Case 1 (X->Y), Case 2 (Y->X), and Case 3 (inconclusive) are returned for each of the specified approaches. The matrices are also saved to the working directory.
 
-E\[Y1\] = $\beta_0$ + $\beta_{X}X_{true}$ + $G_Y\beta_{G_Y}$ + $G_X\beta_{G_X}$
 
 ## Example
 Consider an example with 1000 subjects for both X and Y (input nX=1000 and nY=1000) with a MAF_GX of 50 (input MAF_GX=0.5) and MAF_GY of 50 (input MAF_GY=0.5). Consider no pleiotropy, measurement error, or unmeasured counfouding (input measurementError = F, unmeasuredConfounding=F, betaGX=0, gammaGY=0). Then, let X be generated from a normal distribution with a variance of 1 (input varX = 1) and mean such that E\[Xtrue \] = 0 + 0.2\*GX (input gamma0=0, gammaGX=0.2). 
