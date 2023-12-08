@@ -4,11 +4,27 @@ Examines MR approaches to detect the directionality between phenotype 1 X and ph
 ## Installation
 ```
 install.packages("devtools")
-devtools::install_github("xue-hr/MRCD")
-devtools::install_github("MRCIEU/TwoSampleMR")
-devtools::install_github("xue-hr/MRcML")
-devtools::install_github("xue-hr/BiDirectCausal")
+```
+Note: if you already have devtools installed, you don't need to install it again.
 
+```
+devtools::install_github("xue-hr/MRCD")
+```
+Note: 
+```
+devtools::install_github("MRCIEU/TwoSampleMR")
+```
+
+```
+devtools::install_github("xue-hr/MRcML")
+```
+
+```
+devtools::install_github("xue-hr/BiDirectCausal")
+```
+Note: MRCD must be installed first
+
+```
 devtools::install_github("SharonLutz/MRdirection")
 ```
 
@@ -63,7 +79,7 @@ Consider an example with 1000 subjects for both X and Y (input nX=1000 and nY=10
 Y1 is generated from a normal distribution (input contY=T) with a variance of 0.2 (input varY = 0.2) and mean such that E\[Y1 \] = 0 + $\beta_{X}X$ + 0.2\*GY (input beta0 = 0, betaGY=0.2) and beta_{X} varies from 0 to 2 (input betaX = c(seq(from = 0, to = 0.5, by=0.1),seq(from = 0.75, to = 2, by=0.25))). All available MR approaches will be examined (input runMethods="All"). The R code to run this example is given below. 
 ```
 library(MRdirection)
-results<-MRdirection(nSim = 100, nX = 1000, nY=1000, MAF_GX = 0.5, MAF_GY = 0.5,
+results<-MRdirection(nSim = 10, nX = 1000, nY=1000, MAF_GX = 0.5, MAF_GY = 0.5,
 gamma0 = 0, gammaGX = 1, gammaGY = 0, varX = 1, measurementError = F, beta0 = 0,
 betaX = c(seq(from = 0, to = 0.5, by=0.1),seq(from = 0.75, to = 2, by=0.25)),
 betaGX=rep(0,10), betaGY=rep(0.2,10), unmeasuredConfounding=F, varY = 1,
@@ -76,6 +92,12 @@ The function outputs the following matrices where each row corresponds to $\beta
 round(results$mat_total1, 2)
 round(results$mat_total2, 2)
 round(results$mat_total3, 2)
+```
+
+Following output.
+
+```
+
 ```
 
 ## References
