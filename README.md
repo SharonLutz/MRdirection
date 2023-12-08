@@ -196,3 +196,11 @@ round(results$mat_total3, 2)
 
 
 ## References
+G. Hemani, K. Tilling and G. Davey Smith, "Orienting the causal relationship between imprecisely measured traits using GWAS summary data," PLoS genetics, vol. 13, no. 11, 2017. 
+
+H. Xue and W. Pan, "Inferring causal direction between two traits in the presence of horizontal pleiotropy with GWAS summary data," PLoS Genet, vol. 16, no. 11, 2020. 
+
+H. Xue and W. Pan, "Robust inference of bi-directional causal relationships in presence of correlated pleiotropy with GWAS summary data," PLoS Genet, vol. 18, no. 5, 2022. 
+
+G. Hemani, J. Zheng, B. Elsworth, K. Wade, D. Baird, V. Haberland, C. Laurin, S. Burgess, J. Bowden, R. Langdon, V. Tan, J. Yarmolinsky, H. Shihab, N. Timpson, D. Evans, C. Relton, R. Martin, G. Davey Smith, T. Gaunt, P. Haycock and T. M.-B. Collaboration., "The MR-Base platform supports systematic causal inference across the human phenome," eLife, vol. 7, 2018. 
+
