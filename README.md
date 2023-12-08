@@ -80,8 +80,8 @@ Y1 is generated from a normal distribution (input contY=T) with a variance of 0.
 ```
 library(MRdirection)
 results<-MRdirection(nSim = 10, nX = 1000, nY=1000, MAF_GX = rep(0.5,10), MAF_GY = rep(0.5,10),
-gamma0 = 0, gammaGX = 1, gammaGY = 0, varX = 1, measurementError = F, beta0 = 0,
-betaX = c(seq(from = 0, to = 0.5, by=0.1),seq(from = 0.75, to = 2, by=0.25)),
+gamma0 = 0, gammaGX = rep(0.2,10), gammaGY = rep(0,10), varX = 1, measurementError = F, beta0 = 0,
+betaX = c(seq(from = 0, to = 0.5, by=0.25),seq(from = 0.75, to = 2, by=0.25)),
 betaGX=rep(0,10), betaGY=rep(0.2,10), unmeasuredConfounding=F, varY = 1,
 sig.level = 0.05, SEED = 1, runMethods="All")
 ```
@@ -90,14 +90,109 @@ The function outputs the following matrices where each row corresponds to $\beta
 
 ```
 round(results$mat_total1, 2)
+
+      betaX MRS.ivw MRS.wMedian MRS.Egger CDRatio CDEgger CDgls tsmr_IVW tsmr_Egger tsmr_weighted_median
+ [1,]  0.00     0.2         0.1       0.0     0.1       0     0      0.1        0.0                  0.1
+ [2,]  0.25     0.9         0.8       0.0     0.2       0     0      0.9        0.0                  0.8
+ [3,]  0.50     1.0         0.9       0.0     0.7       0     0      0.8        0.0                  0.8
+ [4,]  0.75     1.0         1.0       0.1     0.7       0     0      0.9        0.0                  0.8
+ [5,]  1.00     1.0         1.0       0.4     0.5       0     0      0.9        0.3                  1.0
+ [6,]  1.25     0.8         0.8       0.2     0.1       0     0      1.0        0.2                  1.0
+ [7,]  1.50     0.2         0.2       0.2     0.0       0     0      0.8        0.4                  0.9
+ [8,]  1.75     0.0         0.0       0.0     0.0       0     0      0.9        0.4                  1.0
+ [9,]  2.00     0.0         0.0       0.0     0.0       0     0      0.6        0.3                  0.7
+      tsmr_uwr tsmr_simple_median tsmr_pwm tsmr_meta_fixed_simple tsmr_IVW_mre tsmr_IVW_fe tsmr_Egger_Boot
+ [1,]        0                0.1      0.1                    0.1          0.1         0.1             0.0
+ [2,]        0                0.7      0.8                    1.0          0.9         1.0             0.0
+ [3,]        0                0.8      0.8                    0.8          0.7         0.8             0.0
+ [4,]        0                1.0      0.9                    0.8          0.8         0.8             0.0
+ [5,]        0                1.0      1.0                    0.9          0.8         0.9             0.2
+ [6,]        0                1.0      1.0                    1.0          0.9         1.0             0.2
+ [7,]        0                1.0      0.9                    0.8          0.8         0.8             0.7
+ [8,]        0                0.9      1.0                    0.9          0.7         0.9             0.6
+ [9,]        0                1.0      0.8                    0.6          0.4         0.6             0.5
+      BDCDcML.S.DP BDMRcML.S.DP BDCD.Ratio.S BDCD.Egger.S
+ [1,]          0.2          0.0          0.3          0.1
+ [2,]          0.1          0.0          0.1          0.0
+ [3,]          0.6          0.3          0.4          0.0
+ [4,]          0.7          0.5          0.2          0.0
+ [5,]          0.7          0.7          0.7          0.0
+ [6,]          0.7          0.6          0.5          0.0
+ [7,]          0.9          0.9          0.9          0.0
+ [8,]          1.0          1.0          0.9          0.0
+ [9,]          1.0          1.0          1.0          0.0
+```
+
+```
 round(results$mat_total2, 2)
+
+      betaX MRS.ivw MRS.wMedian MRS.Egger CDRatio CDEgger CDgls tsmr_IVW tsmr_Egger tsmr_weighted_median
+ [1,]  0.00       0           0         0       0       0     0      0.1        0.0                  0.1
+ [2,]  0.25       0           0         0       0       0     0      0.0        0.0                  0.0
+ [3,]  0.50       0           0         0       0       0     0      0.0        0.0                  0.0
+ [4,]  0.75       0           0         0       0       0     0      0.0        0.2                  0.0
+ [5,]  1.00       0           0         0       0       0     0      0.0        0.2                  0.0
+ [6,]  1.25       0           0         0       0       0     0      0.0        0.1                  0.0
+ [7,]  1.50       0           0         0       0       0     0      0.0        0.0                  0.0
+ [8,]  1.75       0           0         0       0       0     0      0.0        0.2                  0.0
+ [9,]  2.00       0           0         0       0       0     0      0.0        0.1                  0.0
+      tsmr_uwr tsmr_simple_median tsmr_pwm tsmr_meta_fixed_simple tsmr_IVW_mre tsmr_IVW_fe tsmr_Egger_Boot
+ [1,]        0                0.1      0.1                    0.1          0.1         0.1             0.0
+ [2,]        0                0.0      0.0                    0.0          0.0         0.0             0.0
+ [3,]        0                0.0      0.0                    0.0          0.0         0.0             0.0
+ [4,]        0                0.0      0.0                    0.0          0.0         0.0             0.2
+ [5,]        0                0.0      0.0                    0.0          0.0         0.0             0.0
+ [6,]        0                0.0      0.0                    0.0          0.0         0.0             0.0
+ [7,]        0                0.0      0.0                    0.0          0.0         0.0             0.0
+ [8,]        0                0.0      0.0                    0.0          0.0         0.0             0.2
+ [9,]        0                0.0      0.0                    0.0          0.0         0.0             0.1
+      BDCDcML.S.DP BDMRcML.S.DP BDCD.Ratio.S BDCD.Egger.S
+ [1,]            0            0            0            0
+ [2,]            0            0            0            0
+ [3,]            0            0            0            0
+ [4,]            0            0            0            0
+ [5,]            0            0            0            0
+ [6,]            0            0            0            0
+ [7,]            0            0            0            0
+ [8,]            0            0            0            0
+ [9,]            0            0            0            0
+```
+
+```
 round(results$mat_total3, 2)
+
+      betaX MRS.ivw MRS.wMedian MRS.Egger CDRatio CDEgger CDgls tsmr_IVW tsmr_Egger tsmr_weighted_median
+ [1,]  0.00     0.8         0.9       1.0     0.9       1     1      0.8        1.0                  0.8
+ [2,]  0.25     0.1         0.2       1.0     0.8       1     1      0.1        1.0                  0.2
+ [3,]  0.50     0.0         0.1       1.0     0.3       1     1      0.2        1.0                  0.2
+ [4,]  0.75     0.0         0.0       0.9     0.3       1     1      0.1        0.8                  0.2
+ [5,]  1.00     0.0         0.0       0.6     0.5       1     1      0.1        0.5                  0.0
+ [6,]  1.25     0.2         0.2       0.8     0.9       1     1      0.0        0.7                  0.0
+ [7,]  1.50     0.8         0.8       0.8     1.0       1     1      0.2        0.6                  0.1
+ [8,]  1.75     1.0         1.0       1.0     1.0       1     1      0.1        0.4                  0.0
+ [9,]  2.00     1.0         1.0       1.0     1.0       1     1      0.4        0.6                  0.3
+      tsmr_uwr tsmr_simple_median tsmr_pwm tsmr_meta_fixed_simple tsmr_IVW_mre tsmr_IVW_fe tsmr_Egger_Boot
+ [1,]        1                0.8      0.8                    0.8          0.8         0.8             1.0
+ [2,]        1                0.3      0.2                    0.0          0.1         0.0             1.0
+ [3,]        1                0.2      0.2                    0.2          0.3         0.2             1.0
+ [4,]        1                0.0      0.1                    0.2          0.2         0.2             0.8
+ [5,]        1                0.0      0.0                    0.1          0.2         0.1             0.8
+ [6,]        1                0.0      0.0                    0.0          0.1         0.0             0.8
+ [7,]        1                0.0      0.1                    0.2          0.2         0.2             0.3
+ [8,]        1                0.1      0.0                    0.1          0.3         0.1             0.2
+ [9,]        1                0.0      0.2                    0.4          0.6         0.4             0.4
+      BDCDcML.S.DP BDMRcML.S.DP BDCD.Ratio.S BDCD.Egger.S
+ [1,]          0.8          1.0          0.7          0.9
+ [2,]          0.9          1.0          0.9          1.0
+ [3,]          0.4          0.7          0.6          1.0
+ [4,]          0.3          0.5          0.8          1.0
+ [5,]          0.3          0.3          0.3          1.0
+ [6,]          0.3          0.4          0.5          1.0
+ [7,]          0.1          0.1          0.1          1.0
+ [8,]          0.0          0.0          0.1          1.0
+ [9,]          0.0          0.0          0.0          1.0
 ```
 
-Following output.
 
-```
-
-```
 
 ## References
