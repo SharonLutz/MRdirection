@@ -40,10 +40,10 @@ E\[Y1\] = $\beta_0$ + $\beta_{X}X_{true}$ + $G_Y\beta_{G_Y}$ + $G_X\beta_{G_X}$ 
 
 where $\gamma_{U}$ and $\beta_{U}$ are input by the user (i.e., gammaU and betaU).
 
-After the data are generated, then the MRdirection function runs the specified approaches to determine if the measured exposure X causes the outcome Y. 
+After the data are generated, then the MRdirection function runs the specified approaches to determine which of the following three cases each approach concludes: case 1: the exposure X causes the outcome Y; case 2: the outcome Y causes the exposure X; case 3: inconclusive.
 
-The approaches can be specified as the following (input: runMethods):
-"All": all approaches will be run.
+The following approaches can be specified by the user (input: runMethods):
+"All": all approaches will be run. This is the default.
 
 "MRSteigerMethods": runs the MR Steiger approach.
 
