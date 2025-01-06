@@ -1,1 +1,4 @@
 export("MRdirection")
+importFrom("stats", "cor", "glm", "lm", "pnorm", "qnorm", "rbinom",
+           "rnorm")
+importFrom("utils", "write.table")
