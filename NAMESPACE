@@ -1,4 +1,5 @@
 export("MRdirection")
-importFrom("stats", "cor", "glm", "lm", "pnorm", "qnorm", "rbinom",
-           "rnorm")
+importFrom("grDevices", "dev.off", "pdf")
+importFrom("graphics", "legend", "lines")
+importFrom("stats", "cor", "glm", "lm", "pnorm", "qnorm", "rbinom", "rnorm")
 importFrom("utils", "write.table")
