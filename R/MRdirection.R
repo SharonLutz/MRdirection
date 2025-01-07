@@ -1,5 +1,5 @@
 MRdirection <-
-function(nSim=10, nX=1000, nY=1000, 
+function(nSim=10, nX=1000, nY=1000,
            MAF_GX=rep(0.5,10), MAF_GY=rep(0.5,10),
            gamma0=0, gammaGX=rep(0.2,10), gammaGY=rep(0,10),
            measurementError=F, delta0=0, deltaX=1, varME=1,
@@ -607,85 +607,93 @@ function(nSim=10, nX=1000, nY=1000,
             tmp.df$N_T2 <- nY
             
             pruned1 <- list(sig_part=tmp.df)
-            cd3 <- CD_3_methods_Independent(pruned1$sig_part)
+            mtry <- try(cd3 <- CD_3_methods_Independent(pruned1$sig_part))
             
-            ratio.YX <- cd3$CD_Ratio_result$T1toT2
-            ratio.XY <- cd3$CD_Ratio_result$T2toT1
-            
-            egger.YX<- cd3$CD_Egger_result$T1toT2
-            egger.XY <- cd3$CD_Egger_result$T2toT1
-            
-            gls.YX <- cd3$CD_GLS_result$T1toT2
-            gls.XY <- cd3$CD_GLS_result$T2toT1
-            
-            # Confidence intervals for K - needed for use in decision rules
-            # CD-ratio CIs
-            lowerCIyx.cdRatio <- ratio.YX["K"] - qnorm(1-sig.level/2)*ratio.YX["se(K)"]
-            upperCIyx.cdRatio <- ratio.YX["K"] + qnorm(1-sig.level/2)*ratio.YX["se(K)"]
-            
-            lowerCIxy.cdRatio <- ratio.XY["K"] - qnorm(1-sig.level/2)*ratio.XY["se(K)"]
-            upperCIxy.cdRatio <- ratio.XY["K"] + qnorm(1-sig.level/2)*ratio.XY["se(K)"]
-            
-            # CD-Egger CIs
-            lowerCIyx.cdEgger <- egger.YX["K"] - qnorm(1-sig.level/2)*egger.YX["se(K)"]
-            upperCIyx.cdEgger <- egger.YX["K"] + qnorm(1-sig.level/2)*egger.YX["se(K)"]
-            
-            lowerCIxy.cdEgger <- egger.XY["K"] - qnorm(1-sig.level/2)*egger.XY["se(K)"]
-            upperCIxy.cdEgger <- egger.XY["K"] + qnorm(1-sig.level/2)*egger.XY["se(K)"]
-            
-            # CD-GLS CIs
-            lowerCIyx.cdGLS <- gls.YX["K"] - qnorm(1-sig.level/2)*gls.YX["se(K)"]
-            upperCIyx.cdGLS <- gls.YX["K"] + qnorm(1-sig.level/2)*gls.YX["se(K)"]
-            
-            lowerCIxy.cdGLS <- gls.XY["K"] - qnorm(1-sig.level/2)*gls.XY["se(K)"]
-            upperCIxy.cdGLS <- gls.XY["K"] + qnorm(1-sig.level/2)*gls.XY["se(K)"]
-            
-            # case 1: X->Y if CIxy not inside [-1,1] and CIyx inside [-1,0) OR (0,1]
-            # case 2: X<-Y if CIyx not inside [-1,1] and CIxy inside [-1,0) OR (0,1]
-            # case 3: neither otherwise
-            # CD-Ratio decisions
-            if(upperCIxy.cdRatio < lowerCIxy.cdRatio){
-              stop("LowerCIxy > UpperCIxy")}
-            if(upperCIyx.cdRatio < lowerCIyx.cdRatio){
-              stop("LowerCIyx > UpperCIyx")}
-            
-            if(upperCIxy.cdEgger < lowerCIxy.cdEgger){
-              stop("LowerCIxyEgger > UpperCIxyEgger")}
-            if(upperCIyx.cdEgger < lowerCIyx.cdEgger){
-              stop("LowerCIyxEgger > UpperCIyxEgger")}
-            
-            if(upperCIxy.cdGLS < lowerCIxy.cdGLS){
-              stop("LowerCIxy > UpperCIxy")}
-            if(upperCIyx.cdGLS < lowerCIyx.cdGLS){
-              stop("LowerCIyx > UpperCIyx")}
-            
-            if("CDRatio" %in% colnames.methods){
-                if((upperCIxy.cdRatio < (-1) | lowerCIxy.cdRatio>1) &
-                   ((lowerCIyx.cdRatio>=(-1) & upperCIyx.cdRatio<0) | (lowerCIyx.cdRatio>(0) & upperCIyx.cdRatio<=1)) ){
-                  mat1[bX, "CDRatio"] <- mat1[bX, "CDRatio"] + 1}
-                if((upperCIyx.cdRatio < (-1) | lowerCIyx.cdRatio>1) &
-                   ((lowerCIxy.cdRatio>=(-1) & upperCIxy.cdRatio< 0) | (lowerCIxy.cdRatio>(0) & upperCIxy.cdRatio<= 1)) ){
-                  mat2[bX, "CDRatio"] <- mat2[bX, "CDRatio"] + 1}
+            if(inherits(mtry, "try-error")){
+              if("CDRatio" %in% colnames.methods){matError[bX, "CDRatio"] <- matError[bX, "CDRatio"] + 1}
+              if("CDEgger" %in% colnames.methods){matError[bX, "CDEgger"] <- matError[bX, "CDEgger"] + 1}
+              if("CDgls" %in% colnames.methods){matError[bX, "CDgls"] <- matError[bX, "CDgls"] + 1}
             }
             
-            # CD-Egger decisions
-            if("CDEgger" %in% colnames.methods){
-                if((upperCIxy.cdEgger < (-1)  | lowerCIxy.cdEgger>1) &
-                   ((lowerCIyx.cdEgger>=(-1) & upperCIyx.cdEgger<0) | (lowerCIyx.cdEgger>(0) & upperCIyx.cdEgger<=1))){
-                  mat1[bX, "CDEgger"] <- mat1[bX, "CDEgger"] + 1}
-                if((upperCIyx.cdEgger < (-1) | lowerCIyx.cdEgger>1) &
-                   ((lowerCIxy.cdEgger>=(-1)  & upperCIxy.cdEgger< 0) | (lowerCIxy.cdEgger>(0)  & upperCIxy.cdEgger<=1))){
-                  mat2[bX, "CDEgger"] <- mat2[bX, "CDEgger"] + 1}
-            }
+            if(!inherits(mtry, "try-error")){
+              ratio.YX <- cd3$CD_Ratio_result$T1toT2
+              ratio.XY <- cd3$CD_Ratio_result$T2toT1
+              
+              egger.YX<- cd3$CD_Egger_result$T1toT2
+              egger.XY <- cd3$CD_Egger_result$T2toT1
+              
+              gls.YX <- cd3$CD_GLS_result$T1toT2
+              gls.XY <- cd3$CD_GLS_result$T2toT1
+              
+              # Confidence intervals for K - needed for use in decision rules
+              # CD-ratio CIs
+              lowerCIyx.cdRatio <- ratio.YX["K"] - qnorm(1-sig.level/2)*ratio.YX["se(K)"]
+              upperCIyx.cdRatio <- ratio.YX["K"] + qnorm(1-sig.level/2)*ratio.YX["se(K)"]
+              
+              lowerCIxy.cdRatio <- ratio.XY["K"] - qnorm(1-sig.level/2)*ratio.XY["se(K)"]
+              upperCIxy.cdRatio <- ratio.XY["K"] + qnorm(1-sig.level/2)*ratio.XY["se(K)"]
+              
+              # CD-Egger CIs
+              lowerCIyx.cdEgger <- egger.YX["K"] - qnorm(1-sig.level/2)*egger.YX["se(K)"]
+              upperCIyx.cdEgger <- egger.YX["K"] + qnorm(1-sig.level/2)*egger.YX["se(K)"]
+              
+              lowerCIxy.cdEgger <- egger.XY["K"] - qnorm(1-sig.level/2)*egger.XY["se(K)"]
+              upperCIxy.cdEgger <- egger.XY["K"] + qnorm(1-sig.level/2)*egger.XY["se(K)"]
+              
+              # CD-GLS CIs
+              lowerCIyx.cdGLS <- gls.YX["K"] - qnorm(1-sig.level/2)*gls.YX["se(K)"]
+              upperCIyx.cdGLS <- gls.YX["K"] + qnorm(1-sig.level/2)*gls.YX["se(K)"]
+              
+              lowerCIxy.cdGLS <- gls.XY["K"] - qnorm(1-sig.level/2)*gls.XY["se(K)"]
+              upperCIxy.cdGLS <- gls.XY["K"] + qnorm(1-sig.level/2)*gls.XY["se(K)"]
             
-            # CD-GLS decisions
-            if("CDgls" %in% colnames.methods){
-                if((upperCIxy.cdGLS < (-1) | lowerCIxy.cdGLS>1) &
-                   ((lowerCIyx.cdGLS>= (-1) & upperCIyx.cdGLS<0) | (lowerCIyx.cdGLS> (0) & upperCIyx.cdGLS<=1)) ){
-                  mat1[bX, "CDgls"] <- mat1[bX, "CDgls"] + 1}
-                if((upperCIyx.cdGLS < (-1) | lowerCIyx.cdGLS>1) &
-                   ((lowerCIxy.cdGLS>= (-1) & upperCIxy.cdGLS<0) | (lowerCIxy.cdGLS> (0) & upperCIxy.cdGLS<=1)) ){
-                  mat2[bX, "CDgls"] <- mat2[bX, "CDgls"] + 1}
+              # case 1: X->Y if CIxy not inside [-1,1] and CIyx inside [-1,0) OR (0,1]
+              # case 2: X<-Y if CIyx not inside [-1,1] and CIxy inside [-1,0) OR (0,1]
+              # case 3: neither otherwise
+              # CD-Ratio decisions
+              if(upperCIxy.cdRatio < lowerCIxy.cdRatio){
+                stop("LowerCIxy > UpperCIxy")}
+              if(upperCIyx.cdRatio < lowerCIyx.cdRatio){
+                stop("LowerCIyx > UpperCIyx")}
+              
+              if(upperCIxy.cdEgger < lowerCIxy.cdEgger){
+                stop("LowerCIxyEgger > UpperCIxyEgger")}
+              if(upperCIyx.cdEgger < lowerCIyx.cdEgger){
+                stop("LowerCIyxEgger > UpperCIyxEgger")}
+              
+              if(upperCIxy.cdGLS < lowerCIxy.cdGLS){
+                stop("LowerCIxy > UpperCIxy")}
+              if(upperCIyx.cdGLS < lowerCIyx.cdGLS){
+                stop("LowerCIyx > UpperCIyx")}
+              
+              if("CDRatio" %in% colnames.methods){
+                  if((upperCIxy.cdRatio < (-1) | lowerCIxy.cdRatio>1) &
+                     ((lowerCIyx.cdRatio>=(-1) & upperCIyx.cdRatio<0) | (lowerCIyx.cdRatio>(0) & upperCIyx.cdRatio<=1)) ){
+                    mat1[bX, "CDRatio"] <- mat1[bX, "CDRatio"] + 1}
+                  if((upperCIyx.cdRatio < (-1) | lowerCIyx.cdRatio>1) &
+                     ((lowerCIxy.cdRatio>=(-1) & upperCIxy.cdRatio< 0) | (lowerCIxy.cdRatio>(0) & upperCIxy.cdRatio<= 1)) ){
+                    mat2[bX, "CDRatio"] <- mat2[bX, "CDRatio"] + 1}
+              }
+            
+              # CD-Egger decisions
+              if("CDEgger" %in% colnames.methods){
+                  if((upperCIxy.cdEgger < (-1)  | lowerCIxy.cdEgger>1) &
+                     ((lowerCIyx.cdEgger>=(-1) & upperCIyx.cdEgger<0) | (lowerCIyx.cdEgger>(0) & upperCIyx.cdEgger<=1))){
+                    mat1[bX, "CDEgger"] <- mat1[bX, "CDEgger"] + 1}
+                  if((upperCIyx.cdEgger < (-1) | lowerCIyx.cdEgger>1) &
+                     ((lowerCIxy.cdEgger>=(-1)  & upperCIxy.cdEgger< 0) | (lowerCIxy.cdEgger>(0)  & upperCIxy.cdEgger<=1))){
+                    mat2[bX, "CDEgger"] <- mat2[bX, "CDEgger"] + 1}
+              }
+              
+              # CD-GLS decisions
+              if("CDgls" %in% colnames.methods){
+                  if((upperCIxy.cdGLS < (-1) | lowerCIxy.cdGLS>1) &
+                     ((lowerCIyx.cdGLS>= (-1) & upperCIyx.cdGLS<0) | (lowerCIyx.cdGLS> (0) & upperCIyx.cdGLS<=1)) ){
+                    mat1[bX, "CDgls"] <- mat1[bX, "CDgls"] + 1}
+                  if((upperCIyx.cdGLS < (-1) | lowerCIyx.cdGLS>1) &
+                     ((lowerCIxy.cdGLS>= (-1) & upperCIxy.cdGLS<0) | (lowerCIxy.cdGLS> (0) & upperCIxy.cdGLS<=1)) ){
+                    mat2[bX, "CDgls"] <- mat2[bX, "CDgls"] + 1}
+              }
             }
        }
         
@@ -903,7 +911,7 @@ function(nSim=10, nX=1000, nY=1000,
         ################################################################################
         # Start MR Steiger - Get values and p-values from Y~G and X~G
         ################################################################################
-        if( ("MRS.wMedian" %in% colnames.methods) | ("MRS.ivw" %in% colnames.methods) | ("MRS.Egger" %in% colnames.methods)){
+        if( ("MRS.wMedian" %in% colnames.methods) | ("MRS.ivw" %in% colnames.methods) | ("MRS.Egger" %in% colnames.methods) ){
         
             #Vector of p-values of SNP-exposure
             p_exp<-rep(0,nSNP_GX)
@@ -963,44 +971,57 @@ function(nSim=10, nX=1000, nY=1000,
             ################################################################################
             
             #A statistical test for whether the assumption that exposure causes outcome is valid
-            mrs<-mr_steiger(p_exp, p_out, n_exp, n_out, r_exp, r_out, r_xxo = 1, r_yyo = 1)
+            mtryMRS <- try(mrs<-mr_steiger(p_exp, p_out, n_exp, n_out, r_exp, r_out, r_xxo = 1, r_yyo = 1))
             
-            if( ("MRS.wMedian" %in% colnames.methods)){
-
+            if( ("MRS.wMedian" %in% colnames.methods) ){
+              # matError if MR Steiger errors out
+              if(inherits(mtryMRS, "try-error") | is.na(mtryMRS$steiger_test)){
+                matError[bX, "MRS.wMedian"] <- matError[bX, "MRS.wMedian"]+1
+              }
+              # return cases if no error returned
+              if(!inherits(mtryMRS, "try-error") & !is.na(mtryMRS$steiger_test)){
                 # case 1: X->Y1 if steiger_test<alpha and weighted median pval<alpha and correct causal direction == T
                 # case 2: X<-Y1 if correct causal direction == F & weighted median pval < alpha & steiger_test<alpha
-                # case 3: neither if pSteiger>alpha or pMR>alpha
                 if(mrs$correct_causal_direction==TRUE & mrs$steiger_test <= sig.level & tsmr.weighted_median.GX$pval <= sig.level){
                   mat1[bX,"MRS.wMedian"]<-mat1[bX,"MRS.wMedian"]+1}
                 if(mrs$correct_causal_direction==FALSE & mrs$steiger_test <= sig.level & tsmr.weighted_median.GX$pval <= sig.level){
                   mat2[bX,"MRS.wMedian"]<-mat2[bX,"MRS.wMedian"]+1}
+              }
             }
             
             if( ("MRS.ivw" %in% colnames.methods)){
-
+              # matError if MR Steiger errors out
+              if(inherits(mtryMRS, "try-error") | is.na(mtryMRS$steiger_test)){
+                matError[bX, "MRS.ivw"] <- matError[bX, "MRS.ivw"]+1
+              }
+              if(!inherits(mtryMRS, "try-error") & !is.na(mtryMRS$steiger_test)){
                 # case 1: X->Y1 if steiger_test<alpha and MR IVW pval<alpha and correct causal direction == T
                 # case 2: X<-Y1 if correct causal direction == F & MR IVW pval < alpha & steiger_test<alpha
-                # case 3: neither if pSteiger>alpha or MR Egger pval >alpha
                 if(mrs$correct_causal_direction==TRUE & mrs$steiger_test <= sig.level & tsmr.IVW.GX$pval <= sig.level){
                   mat1[bX,"MRS.ivw"]<-mat1[bX,"MRS.ivw"]+1}
                 if(mrs$correct_causal_direction==FALSE & mrs$steiger_test <= sig.level & tsmr.IVW.GX$pval <= sig.level){
                   mat2[bX,"MRS.ivw"]<-mat2[bX,"MRS.ivw"]+1}
+              }
            }
             
             if( ("MRS.Egger" %in% colnames.methods)){
-
+              # matError if MR Steiger errors out
+              if(inherits(mtryMRS, "try-error") | is.na(mtryMRS$steiger_test)){
+                matError[bX, "MRS.Egger"] <- matError[bX, "MRS.Egger"]+1
+              }
+              if(!inherits(mtryMRS, "try-error") & !is.na(mtryMRS$steiger_test)){
                 # case 1: X->Y1 if steiger_test<alpha and MR Egger pval<alpha and correct causal direction == T
                 # case 2: X<-Y1 if correct causal direction == F & MR Egger pval < alpha & steiger_test<alpha
-                # case 3: neither if pSteiger>alpha or MR Egger pval >alpha
                 if(mrs$correct_causal_direction==TRUE & mrs$steiger_test <= sig.level & tsmr.Egger.GX$pval <= sig.level){
                   mat1[bX,"MRS.Egger"]<-mat1[bX,"MRS.Egger"]+1}
                 if(mrs$correct_causal_direction==FALSE & mrs$steiger_test <= sig.level & tsmr.Egger.GX$pval <= sig.level){
                   mat2[bX,"MRS.Egger"]<-mat2[bX,"MRS.Egger"]+1}
+              }
             }
         
         }
         
-        ################################################################################
+      ################################################################################
         # end loops
         ################################################################################    
       }#beta loop
@@ -1009,10 +1030,137 @@ function(nSim=10, nX=1000, nY=1000,
     pl=F
     if(any(gammaGY!=0) | any(betaGX!=0)){pl=T}
     
+    ##############################
+    # start plots
+    ##############################
+    mat_total1 <- as.data.frame(cbind(mat1[,1],(mat1[,-1]/nSim)))
+    mat_total2 <- as.data.frame(cbind(mat2[,1],(mat2[,-1]/nSim)))
+    mat_totalE <- as.data.frame(cbind(matError[,1],(matError[,-1]/nSim)))
     
-    write.table(mat1,file=paste0(path1,"matCase1", nSim,"seed",SEED ,"nX",nX,"nY",nY,"nSNPX", length(MAF_GX),"nSNPY", length(MAF_GY), "contX", contX, "contY",contY,"u",unmeasuredConfounding, "me",measurementError,"p",pl, "l1", long1, "l2",long2,"dx", deltaX, "bU", betaU, "gU",gammaU,"bX",betaGX[1]*100, "gY", gammaGY[1]*100,"eGX", etaGX[1]*100, "eGY", etaGY[1]*100,".txt"), quote=F, row.names = F)
-    write.table(mat2,file=paste0(path1,"matCase2", nSim,"seed",SEED,"nX",nX,"nY",nY,"nSNPX", length(MAF_GX),"nSNPY", length(MAF_GY),"contX", contX, "contY",contY,"u",unmeasuredConfounding, "me",measurementError,"p",pl, "l1", long1, "l2",long2,"dx", deltaX,  "bU", betaU, "gU",gammaU,"bX",betaGX[1]*100, "gY", gammaGY[1]*100,"eGX", etaGX[1]*100, "eGY", etaGY[1]*100 ,".txt"), quote=F, row.names = F)
-    write.table(matError,file=paste0(path1,"matCaseError", nSim,"seed",SEED,"nX",nX,"nY",nY,"nSNPX", length(MAF_GX),"nSNPY", length(MAF_GY),"contX", contX, "contY",contY,"u",unmeasuredConfounding, "me",measurementError,"p",pl, "l1", long1, "l2",long2,"dx", deltaX,  "bU", betaU, "gU",gammaU,"bX",betaGX[1]*100, "gY", gammaGY[1]*100,"eGX", etaGX[1]*100, "eGY", etaGY[1]*100 ,".txt"), quote=F, row.names = F)
+    colnames(mat_total1) <- colnames(mat1)
+    colnames(mat_total2) <- colnames(mat2)
+    colnames(mat_totalE) <- colnames(matError)
     
-    return(list("mat1"=mat1, "mat2"=mat2, "matE"=matError))
+    #########################################
+    # case 1 plot
+    #########################################
+    pdf(paste(path1,"Plot_Case1nSim",nSim,"seed",SEED ,"nX",nX,"nY",nY,"nSNPX", length(MAF_GX),"nSNPY", length(MAF_GY), "contX", contX, "contY",contY,"u",unmeasuredConfounding, "me",measurementError,"p",pl, "l1", long1, "l2",long2,"dx", deltaX, "bU", betaU, "gU",gammaU,"bX",betaGX[1]*100, "gY", gammaGY[1]*100,"eGX", etaGX[1]*100, "eGY", etaGY[1]*100,".pdf", sep = ""))
+    
+    plot(-2,-2,xlim=c(min(betaX),max(betaX)),ylim=c(0,1.1),main="",xlab=expression(beta[X]),ylab="Proportion of Simulations")
+    
+    if( ("MRS.ivw" %in% colnames.methods)){lines(betaX,mat_total1[,"MRS.ivw"],col="blue4",pch=1,lty=2,type="b", lwd=2.4)}
+    if( ("MRS.wMedian" %in% colnames.methods)){lines(betaX,mat_total1[,"MRS.wMedian"],col="steelblue1",pch=3,lty=3,type="b", lwd=2.4)}
+    if( ("MRS.Egger" %in% colnames.methods)){lines(betaX,mat_total1[,"MRS.Egger"],col="darkslategray2",pch=4,lty=4,type="b", lwd=2.4)}
+    
+    # CD methods - pch=2; PURPLES!!! -- dark purple, bright purple, medium purple
+    if( ("CDRatio" %in% colnames.methods)){lines(betaX,mat_total1[,"CDRatio"],col="darkorange2",pch=1,lty=1,type="b", lwd=2.4)}
+    if( ("CDEgger" %in% colnames.methods)){lines(betaX,mat_total1[,"CDEgger"],col="darkorange1",pch=3,lty=2,type="b", lwd=2.4)}
+    if( ("CDgls" %in% colnames.methods)){lines(betaX,mat_total1[,"CDgls"],col="orange2",pch=4,lty=3,type="b", lwd=2.4)}
+    
+    # Bi-directional methods - reds/pinks for TSMR, reds/browns for MR
+    # IVW methods - pch=4; REDS
+    if( ("tsmr_IVW" %in% colnames.methods)){lines(betaX,mat_total1[,"tsmr_IVW"],col="plum2",pch=3,lty=1,type="b", lwd=2.4)}
+    if( ("tsmr_IVW_mre" %in% colnames.methods)){lines(betaX,mat_total1[,"tsmr_IVW_mre"],col="mediumpurple3",pch=4,lty=4,type="b", lwd=2.4)}
+    if( ("tsmr_IVW_fe" %in% colnames.methods)){lines(betaX,mat_total1[,"tsmr_IVW_fe"],col="mediumorchid1",pch=6,lty=1,type="b", lwd=2.4)}
+    ##########
+    # Egger methods - pch = 0
+    if( ("tsmr_Egger" %in% colnames.methods)){lines(betaX,mat_total1[,"tsmr_Egger"],col="deeppink2",pch=1,lty=1,type="b", lwd=2.4)}
+    if( ("tsmr_Egger_Boot" %in% colnames.methods)){lines(betaX,mat_total1[,"tsmr_Egger_Boot"],col="firebrick1",pch=4,lty=2,type="b", lwd=2.4)}
+    
+    # median methods - pch=6 & 8
+    if( ("tsmr_weighted_median" %in% colnames.methods)){lines(betaX,mat_total1[,"tsmr_weighted_median"],col="darkgreen",pch=4,lty=3,type="b", lwd=2.4)}
+    if( ("tsmr_simple_median" %in% colnames.methods)){lines(betaX,mat_total1[,"tsmr_simple_median"],col="chartreuse2",pch=6,lty=4,type="b", lwd=2.4)}
+    if( ("tsmr_pwm" %in% colnames.methods)){lines(betaX,mat_total1[,"tsmr_pwm"],col="lightgreen",pch=0,lty=5,type="b", lwd=2.4)}
+    
+    # other tsmr methods - pch=7
+    if( ("tsmr_uwr" %in% colnames.methods)){lines(betaX,mat_total1[,"tsmr_uwr"],col="black",pch=1,lty=1,type="b", lwd=2.4)}
+    
+    if( ("BDCDcML.S.DP" %in% colnames.methods)){lines(betaX,mat_total1[,"BDCDcML.S.DP"],col="goldenrod3",pch=2,lty=2,type="b", lwd=2.4)}
+    if( ("BDMRcML.S.DP" %in% colnames.methods)){lines(betaX,mat_total1[,"BDMRcML.S.DP"],col="goldenrod1",pch=3,lty=1,type="b", lwd=2.4)}
+    if( ("BDCD.Ratio.S" %in% colnames.methods)){lines(betaX,mat_total1[,"BDCD.Ratio.S"],col="yellow4",pch=6,lty=1,type="b", lwd=2.4)}
+    if( ("BDCD.Egger.S" %in% colnames.methods)){lines(betaX,mat_total1[,"BDCD.Egger.S"],col="yellow3",pch=0,lty=4,type="b", lwd=2.4)}
+    
+    dev.off()
+    
+    #########################################
+    # case 2 plot
+    #########################################
+    pdf(paste(path1,"Plot_Case2nSim",nSim,"seed",SEED ,"nX",nX,"nY",nY,"nSNPX", length(MAF_GX),"nSNPY", length(MAF_GY), "contX", contX, "contY",contY,"u",unmeasuredConfounding, "me",measurementError,"p",pl, "l1", long1, "l2",long2,"dx", deltaX, "bU", betaU, "gU",gammaU,"bX",betaGX[1]*100, "gY", gammaGY[1]*100,"eGX", etaGX[1]*100, "eGY", etaGY[1]*100,".pdf", sep = ""))
+    plot(-2,-2,xlim=c(min(betaX),max(betaX)),ylim=c(0,1.1),main="",xlab=expression(beta[X]),ylab="Proportion of Simulations")
+    ###########
+    
+    if( ("MRS.ivw" %in% colnames.methods)){lines(betaX,mat_total2[,"MRS.ivw"],col="blue4",pch=1,lty=2,type="b", lwd=2.4)}
+    if( ("MRS.wMedian" %in% colnames.methods)){lines(betaX,mat_total2[,"MRS.wMedian"],col="steelblue1",pch=3,lty=3,type="b", lwd=2.4)}
+    if( ("MRS.Egger" %in% colnames.methods)){lines(betaX,mat_total2[,"MRS.Egger"],col="darkslategray2",pch=4,lty=4,type="b", lwd=2.4)}
+    
+    # CD methods - pch=2; PURPLES!!! -- dark purple, bright purple, medium purple
+    if( ("CDRatio" %in% colnames.methods)){lines(betaX,mat_total2[,"CDRatio"],col="darkorange2",pch=1,lty=1,type="b", lwd=2.4)}
+    if( ("CDEgger" %in% colnames.methods)){lines(betaX,mat_total2[,"CDEgger"],col="darkorange1",pch=3,lty=2,type="b", lwd=2.4)}
+    if( ("CDgls" %in% colnames.methods)){lines(betaX,mat_total2[,"CDgls"],col="orange2",pch=4,lty=3,type="b", lwd=2.4) }
+    
+    # Bi-directional methods - reds/pinks for TSMR, reds/browns for MR
+    # IVW methods - pch=4; REDS
+    if( ("tsmr_IVW" %in% colnames.methods)){lines(betaX,mat_total2[,"tsmr_IVW"],col="plum2",pch=3,lty=1,type="b", lwd=2.4)}
+    if( ("tsmr_IVW_mre" %in% colnames.methods)){lines(betaX,mat_total2[,"tsmr_IVW_mre"],col="mediumpurple3",pch=4,lty=4,type="b", lwd=2.4)}
+    if( ("tsmr_IVW_fe" %in% colnames.methods)){lines(betaX,mat_total2[,"tsmr_IVW_fe"],col="mediumorchid1",pch=6,lty=1,type="b", lwd=2.4)}
+    ##########
+    # Egger methods - pch = 0
+    if( ("tsmr_Egger" %in% colnames.methods)){lines(betaX,mat_total2[,"tsmr_Egger"],col="deeppink2",pch=1,lty=1,type="b", lwd=2.4)}
+    if( ("tsmr_Egger_Boot" %in% colnames.methods)){lines(betaX,mat_total2[,"tsmr_Egger_Boot"],col="firebrick1",pch=4,lty=2,type="b", lwd=2.4)}
+    
+    # median methods - pch=6 & 8
+    if( ("tsmr_weighted_median" %in% colnames.methods)){lines(betaX,mat_total2[,"tsmr_weighted_median"],col="darkgreen",pch=4,lty=3,type="b", lwd=2.4)}
+    if( ("tsmr_simple_median" %in% colnames.methods)){lines(betaX,mat_total2[,"tsmr_simple_median"],col="chartreuse2",pch=6,lty=4,type="b", lwd=2.4)}
+    if( ("tsmr_pwm" %in% colnames.methods)){lines(betaX,mat_total2[,"tsmr_pwm"],col="lightgreen",pch=0,lty=5,type="b", lwd=2.4)}
+    
+    # other tsmr methods - pch=7
+    if( ("tsmr_uwr" %in% colnames.methods)){lines(betaX,mat_total2[,"tsmr_uwr"],col="black",pch=1,lty=1,type="b", lwd=2.4)}
+    
+    if( ("BDCDcML.S.DP" %in% colnames.methods)){lines(betaX,mat_total2[,"BDCDcML.S.DP"],col="goldenrod3",pch=2,lty=2,type="b", lwd=2.4)}
+    if( ("BDMRcML.S.DP" %in% colnames.methods)){lines(betaX,mat_total2[,"BDMRcML.S.DP"],col="goldenrod1",pch=3,lty=1,type="b", lwd=2.4)}
+      
+    if( ("BDCD.Ratio.S" %in% colnames.methods)){lines(betaX,mat_total2[,"BDCD.Ratio.S"],col="yellow4",pch=6,lty=1,type="b", lwd=2.4)}
+    if( ("BDCD.Egger.S" %in% colnames.methods)){lines(betaX,mat_total2[,"BDCD.Egger.S"],col="yellow3",pch=0,lty=4,type="b", lwd=2.4)}
+    
+    dev.off()
+    
+    #########################################
+    # legend
+    #########################################
+    pdf(paste("Legend_nSim",nSim,"seed",SEED ,"nX",nX,"nY",nY,"nSNPX", length(MAF_GX),"nSNPY", length(MAF_GY), "contX", contX, "contY",contY,"u",unmeasuredConfounding, "me",measurementError,"p",pl, "l1", long1, "l2",long2,"dx", deltaX, "bU", betaU, "gU",gammaU,"bX",betaGX[1]*100, "gY", gammaGY[1]*100,"eGX", etaGX[1]*100, "eGY", etaGY[1]*100,".pdf", sep = ""))
+    plot(NULL, xlim=0:1, ylim=0:1, ylab='', xlab='', xaxt='n', yaxt='n', bty='n')
+    legend("topleft", xpd=T,legend = c("MR Steiger IVW", "MR Steiger weighted median", "MR Steiger Egger",
+                                       "CD-Ratio", "CD-Egger", "CD-GLS",
+                                       "CD-cML (screening, data perturbation)", "MR-cML (screening, data perturbation)",
+                                       "CD-Ratio (screening)", "CD-Egger (screening)",
+                                       "Bi-MR IVW", "Bi-MR IVW MRE", "Bi-MR IVW FE",
+                                       "Bi-MR Egger", "Bi-MR Egger Boot",
+                                       "Bi-MR weighted median", "Bi-MR simple median", "Bi-MR penalized weighted median",
+                                       "Bi-MR unweighted regression"),
+           pch = c(1,3,4,
+                   1,3,4,
+                   2,3,6,0,
+                   3,4,6,
+                   1,4,
+                   4,6,0,
+                   1),
+           
+           lty = c(2,3,4,1,2,3,2,1,1,4,1,4,1,1,2,3,4,5,1),
+           col = c("blue4","steelblue1","darkslategray2",
+                   "darkorange2","darkorange1","orange2",
+                   "goldenrod3","goldenrod1","yellow4","yellow3",
+                   "plum2","mediumpurple3","mediumorchid1",
+                   "deeppink2","firebrick1",
+                   "darkgreen","chartreuse2","lightgreen","black"),
+           cex=0.6,
+           lwd=1.4)
+    dev.off() 
+    
+    
+    # save matrices
+    write.table(mat_total1,file=paste0(path1,"matCase1nSim", nSim,"seed",SEED ,"nX",nX,"nY",nY,"nSNPX", length(MAF_GX),"nSNPY", length(MAF_GY), "contX", contX, "contY",contY,"u",unmeasuredConfounding, "me",measurementError,"p",pl, "l1", long1, "l2",long2,"dx", deltaX, "bU", betaU, "gU",gammaU,"bX",betaGX[1]*100, "gY", gammaGY[1]*100,"eGX", etaGX[1]*100, "eGY", etaGY[1]*100,".txt"), quote=F, row.names = F)
+    write.table(mat_total2,file=paste0(path1,"matCase2nSim", nSim,"seed",SEED,"nX",nX,"nY",nY,"nSNPX", length(MAF_GX),"nSNPY", length(MAF_GY),"contX", contX, "contY",contY,"u",unmeasuredConfounding, "me",measurementError,"p",pl, "l1", long1, "l2",long2,"dx", deltaX,  "bU", betaU, "gU",gammaU,"bX",betaGX[1]*100, "gY", gammaGY[1]*100,"eGX", etaGX[1]*100, "eGY", etaGY[1]*100 ,".txt"), quote=F, row.names = F)
+    write.table(mat_totalE,file=paste0(path1,"matCaseErrornSim", nSim,"seed",SEED,"nX",nX,"nY",nY,"nSNPX", length(MAF_GX),"nSNPY", length(MAF_GY),"contX", contX, "contY",contY,"u",unmeasuredConfounding, "me",measurementError,"p",pl, "l1", long1, "l2",long2,"dx", deltaX,  "bU", betaU, "gU",gammaU,"bX",betaGX[1]*100, "gY", gammaGY[1]*100,"eGX", etaGX[1]*100, "eGY", etaGY[1]*100 ,".txt"), quote=F, row.names = F)
+    
+    return(list("mat1"=mat_total1, "mat2"=mat_total2, "matE"=mat_totalE))
   }
