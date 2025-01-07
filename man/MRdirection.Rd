@@ -1,6 +1,5 @@
 \name{MRdirection}
 \alias{MRdirection}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{MRdirection}
 \description{
 Runs multiple MR approaches on simulated data for a user specified scenario and for each method returns the number of simulations that returned case 1 (X --> Y), case 2 (Y --> X), or an error.
@@ -8,7 +7,6 @@ Runs multiple MR approaches on simulated data for a user specified scenario and 
 \usage{
 MRdirection(nSim = 10, nX = 1000, nY = 1000, MAF_GX = rep(0.5, 10), MAF_GY = rep(0.5, 10), gamma0 = 0, gammaGX = rep(0.2, 10), gammaGY = rep(0, 10), measurementError = F, delta0 = 0, deltaX = 1, varME = 1, beta0 = 0, betaX = seq(0, 2, by = 0.5), betaGX = rep(0, 10), betaGY = rep(0.2, 10), varY = 0.2, varX = 1, unmeasuredConfounding = F, meanU = 0, varU = 1, gammaU = 1, betaU = 1, eta0 = 0, etaGX = rep(0.2, 10), etaGY = rep(0, 10), snpEffectConfounder = F, long1 = F, long2 = F, kappa0 = 0, kappaY = 0.2, iota0 = 0, iotaX = 0.2, sig.level = 0.05, contX = TRUE, contY = TRUE, nSimTotal = 500, runMethods = "All", SEED = 1, path1, libPath = NULL)
 }
-
 \arguments{
   \item{nSim}{
 is the number of simulations that will be run.
@@ -143,12 +141,11 @@ is the methods to be run. If all methods should be run, runMethods="All" (this i
 "tsmr_Egger_Boot": will run the bidirectional MR Egger Boot method from the TwoSampleMR package; 
 "tsmr_uwr": will run the bidirectional MR unweighted ression method from the TwoSampleMR package.
 }
-                  
   \item{SEED}{
 is the seed for the random number generator
 }
   \item{path1}{
-is the path to directory where .txt file output should be saved.
+is the path to directory where .txt file output and plots should be saved.
 }
   \item{libPath}{
 is the path to directory packages are saved in if saved outside standard library directory. Leave as NULL if packages are saved in standard library directory.
@@ -156,6 +153,7 @@ is the path to directory packages are saved in if saved outside standard library
 }
 \details{
 This function outputs matrices of the number of simulations where case 1 (X --> Y), case 2(Y --> X), or an error is detected by using the MR methods specified by the user. These 3 matrices are also saved as .txt files to the path1 location.
+This function also outputs plots of case 1 and case 2, which are saved to the the path1 location specified by the user.
 }
 \value{
 \item{mat1}{matrix of the number of simulations that returned case 1 for each approach}
@@ -169,14 +167,17 @@ H. Xue and W. Pan, "Inferring causal direction between two traits in the presenc
 
 H. Xue and W. Pan, "Robust inference of bi-directional causal relationships in presence of correlated pleiotropy with GWAS summary data," PLoS Genet, vol. 18, no. 5, 2022. 
 
-G. Hemani, J. Zheng, B. Elsworth, K. Wade, D. Baird, V. Haberland, C. Laurin, S. Burgess, J. Bowden, R. Langdon, V. Tan, J. Yarmolinsky, H. Shihab, N. Timpson, D. Evans, C. Relton, R. Martin, G. Davey Smith, T. Gaunt, P. Haycock and T. M.-B. Collaboration., "The MR-Base platform supports systematic causal inference across the human phenome," eLife, vol. 7, 2018.}
+G. Hemani, J. Zheng, B. Elsworth, K. Wade, D. Baird, V. Haberland, C. Laurin, S. Burgess, J. Bowden, R. Langdon, V. Tan, J. Yarmolinsky, H. Shihab, N. Timpson, D. Evans, C. Relton, R. Martin, G. Davey Smith, T. Gaunt, P. Haycock and T. M.-B. Collaboration., "The MR-Base platform supports systematic causal inference across the human phenome," eLife, vol. 7, 2018.
+}
 \author{
 Sharon Lutz, Kirsten Voorhies
 }
 
+
 \examples{
 tmpwd = getwd()
-MRdirection(nSim=10, runMethods=c("All"), path1=tmpwd)}
+MRdirection(nSim=10, runMethods=c("All"), path1=tmpwd)
+}
 
 \section{Warning}{library(MRCD), library(TwoSampleMR), library(MRcML), and library(BiDirectCausal) are needed to run this function.}
 
