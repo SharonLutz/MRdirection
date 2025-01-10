@@ -8,7 +8,7 @@ function(nSim=10, nX=1000, nY=1000,
            eta0=0, etaGX=rep(0.2,10), etaGY=rep(0,10), snpEffectConfounder=F, 
            long1=F, long2=F, kappa0=0, kappaY=0.2, iota0=0,
            iotaX=0.2, sig.level=0.05, contX= TRUE, contY=TRUE, nSimTotal=500, runMethods="All",
-           SEED=1, path1, libPath=NULL){
+           SEED=1, path1, libPath=NULL, plot.pdf=F){
 
     ################################################################################  
     # load libraries
@@ -1041,121 +1041,123 @@ function(nSim=10, nX=1000, nY=1000,
     colnames(mat_total2) <- colnames(mat2)
     colnames(mat_totalE) <- colnames(matError)
     
-    #########################################
-    # case 1 plot
-    #########################################
-    pdf(paste(path1,"Plot_Case1nSim",nSim,"seed",SEED ,"nX",nX,"nY",nY,"nSNPX", length(MAF_GX),"nSNPY", length(MAF_GY), "contX", contX, "contY",contY,"u",unmeasuredConfounding, "me",measurementError,"p",pl, "l1", long1, "l2",long2,"dx", deltaX, "bU", betaU, "gU",gammaU,"bX",betaGX[1]*100, "gY", gammaGY[1]*100,"eGX", etaGX[1]*100, "eGY", etaGY[1]*100,".pdf", sep = ""))
     
-    plot(-2,-2,xlim=c(min(betaX),max(betaX)),ylim=c(0,1.1),main="",xlab=expression(beta[X]),ylab="Proportion of Simulations")
-    
-    if( ("MRS.ivw" %in% colnames.methods)){lines(betaX,mat_total1[,"MRS.ivw"],col="blue4",pch=1,lty=2,type="b", lwd=2.4)}
-    if( ("MRS.wMedian" %in% colnames.methods)){lines(betaX,mat_total1[,"MRS.wMedian"],col="steelblue1",pch=3,lty=3,type="b", lwd=2.4)}
-    if( ("MRS.Egger" %in% colnames.methods)){lines(betaX,mat_total1[,"MRS.Egger"],col="darkslategray2",pch=4,lty=4,type="b", lwd=2.4)}
-    
-    # CD methods - pch=2; PURPLES!!! -- dark purple, bright purple, medium purple
-    if( ("CDRatio" %in% colnames.methods)){lines(betaX,mat_total1[,"CDRatio"],col="darkorange2",pch=1,lty=1,type="b", lwd=2.4)}
-    if( ("CDEgger" %in% colnames.methods)){lines(betaX,mat_total1[,"CDEgger"],col="darkorange1",pch=3,lty=2,type="b", lwd=2.4)}
-    if( ("CDgls" %in% colnames.methods)){lines(betaX,mat_total1[,"CDgls"],col="orange2",pch=4,lty=3,type="b", lwd=2.4)}
-    
-    # Bi-directional methods - reds/pinks for TSMR, reds/browns for MR
-    # IVW methods - pch=4; REDS
-    if( ("tsmr_IVW" %in% colnames.methods)){lines(betaX,mat_total1[,"tsmr_IVW"],col="plum2",pch=3,lty=1,type="b", lwd=2.4)}
-    if( ("tsmr_IVW_mre" %in% colnames.methods)){lines(betaX,mat_total1[,"tsmr_IVW_mre"],col="mediumpurple3",pch=4,lty=4,type="b", lwd=2.4)}
-    if( ("tsmr_IVW_fe" %in% colnames.methods)){lines(betaX,mat_total1[,"tsmr_IVW_fe"],col="mediumorchid1",pch=6,lty=1,type="b", lwd=2.4)}
-    ##########
-    # Egger methods - pch = 0
-    if( ("tsmr_Egger" %in% colnames.methods)){lines(betaX,mat_total1[,"tsmr_Egger"],col="deeppink2",pch=1,lty=1,type="b", lwd=2.4)}
-    if( ("tsmr_Egger_Boot" %in% colnames.methods)){lines(betaX,mat_total1[,"tsmr_Egger_Boot"],col="firebrick1",pch=4,lty=2,type="b", lwd=2.4)}
-    
-    # median methods - pch=6 & 8
-    if( ("tsmr_weighted_median" %in% colnames.methods)){lines(betaX,mat_total1[,"tsmr_weighted_median"],col="darkgreen",pch=4,lty=3,type="b", lwd=2.4)}
-    if( ("tsmr_simple_median" %in% colnames.methods)){lines(betaX,mat_total1[,"tsmr_simple_median"],col="chartreuse2",pch=6,lty=4,type="b", lwd=2.4)}
-    if( ("tsmr_pwm" %in% colnames.methods)){lines(betaX,mat_total1[,"tsmr_pwm"],col="lightgreen",pch=0,lty=5,type="b", lwd=2.4)}
-    
-    # other tsmr methods - pch=7
-    if( ("tsmr_uwr" %in% colnames.methods)){lines(betaX,mat_total1[,"tsmr_uwr"],col="black",pch=1,lty=1,type="b", lwd=2.4)}
-    
-    if( ("BDCDcML.S.DP" %in% colnames.methods)){lines(betaX,mat_total1[,"BDCDcML.S.DP"],col="goldenrod3",pch=2,lty=2,type="b", lwd=2.4)}
-    if( ("BDMRcML.S.DP" %in% colnames.methods)){lines(betaX,mat_total1[,"BDMRcML.S.DP"],col="goldenrod1",pch=3,lty=1,type="b", lwd=2.4)}
-    if( ("BDCD.Ratio.S" %in% colnames.methods)){lines(betaX,mat_total1[,"BDCD.Ratio.S"],col="yellow4",pch=6,lty=1,type="b", lwd=2.4)}
-    if( ("BDCD.Egger.S" %in% colnames.methods)){lines(betaX,mat_total1[,"BDCD.Egger.S"],col="yellow3",pch=0,lty=4,type="b", lwd=2.4)}
-    
-    dev.off()
-    
-    #########################################
-    # case 2 plot
-    #########################################
-    pdf(paste(path1,"Plot_Case2nSim",nSim,"seed",SEED ,"nX",nX,"nY",nY,"nSNPX", length(MAF_GX),"nSNPY", length(MAF_GY), "contX", contX, "contY",contY,"u",unmeasuredConfounding, "me",measurementError,"p",pl, "l1", long1, "l2",long2,"dx", deltaX, "bU", betaU, "gU",gammaU,"bX",betaGX[1]*100, "gY", gammaGY[1]*100,"eGX", etaGX[1]*100, "eGY", etaGY[1]*100,".pdf", sep = ""))
-    plot(-2,-2,xlim=c(min(betaX),max(betaX)),ylim=c(0,1.1),main="",xlab=expression(beta[X]),ylab="Proportion of Simulations")
-    ###########
-    
-    if( ("MRS.ivw" %in% colnames.methods)){lines(betaX,mat_total2[,"MRS.ivw"],col="blue4",pch=1,lty=2,type="b", lwd=2.4)}
-    if( ("MRS.wMedian" %in% colnames.methods)){lines(betaX,mat_total2[,"MRS.wMedian"],col="steelblue1",pch=3,lty=3,type="b", lwd=2.4)}
-    if( ("MRS.Egger" %in% colnames.methods)){lines(betaX,mat_total2[,"MRS.Egger"],col="darkslategray2",pch=4,lty=4,type="b", lwd=2.4)}
-    
-    # CD methods - pch=2; PURPLES!!! -- dark purple, bright purple, medium purple
-    if( ("CDRatio" %in% colnames.methods)){lines(betaX,mat_total2[,"CDRatio"],col="darkorange2",pch=1,lty=1,type="b", lwd=2.4)}
-    if( ("CDEgger" %in% colnames.methods)){lines(betaX,mat_total2[,"CDEgger"],col="darkorange1",pch=3,lty=2,type="b", lwd=2.4)}
-    if( ("CDgls" %in% colnames.methods)){lines(betaX,mat_total2[,"CDgls"],col="orange2",pch=4,lty=3,type="b", lwd=2.4) }
-    
-    # Bi-directional methods - reds/pinks for TSMR, reds/browns for MR
-    # IVW methods - pch=4; REDS
-    if( ("tsmr_IVW" %in% colnames.methods)){lines(betaX,mat_total2[,"tsmr_IVW"],col="plum2",pch=3,lty=1,type="b", lwd=2.4)}
-    if( ("tsmr_IVW_mre" %in% colnames.methods)){lines(betaX,mat_total2[,"tsmr_IVW_mre"],col="mediumpurple3",pch=4,lty=4,type="b", lwd=2.4)}
-    if( ("tsmr_IVW_fe" %in% colnames.methods)){lines(betaX,mat_total2[,"tsmr_IVW_fe"],col="mediumorchid1",pch=6,lty=1,type="b", lwd=2.4)}
-    ##########
-    # Egger methods - pch = 0
-    if( ("tsmr_Egger" %in% colnames.methods)){lines(betaX,mat_total2[,"tsmr_Egger"],col="deeppink2",pch=1,lty=1,type="b", lwd=2.4)}
-    if( ("tsmr_Egger_Boot" %in% colnames.methods)){lines(betaX,mat_total2[,"tsmr_Egger_Boot"],col="firebrick1",pch=4,lty=2,type="b", lwd=2.4)}
-    
-    # median methods - pch=6 & 8
-    if( ("tsmr_weighted_median" %in% colnames.methods)){lines(betaX,mat_total2[,"tsmr_weighted_median"],col="darkgreen",pch=4,lty=3,type="b", lwd=2.4)}
-    if( ("tsmr_simple_median" %in% colnames.methods)){lines(betaX,mat_total2[,"tsmr_simple_median"],col="chartreuse2",pch=6,lty=4,type="b", lwd=2.4)}
-    if( ("tsmr_pwm" %in% colnames.methods)){lines(betaX,mat_total2[,"tsmr_pwm"],col="lightgreen",pch=0,lty=5,type="b", lwd=2.4)}
-    
-    # other tsmr methods - pch=7
-    if( ("tsmr_uwr" %in% colnames.methods)){lines(betaX,mat_total2[,"tsmr_uwr"],col="black",pch=1,lty=1,type="b", lwd=2.4)}
-    
-    if( ("BDCDcML.S.DP" %in% colnames.methods)){lines(betaX,mat_total2[,"BDCDcML.S.DP"],col="goldenrod3",pch=2,lty=2,type="b", lwd=2.4)}
-    if( ("BDMRcML.S.DP" %in% colnames.methods)){lines(betaX,mat_total2[,"BDMRcML.S.DP"],col="goldenrod1",pch=3,lty=1,type="b", lwd=2.4)}
-      
-    if( ("BDCD.Ratio.S" %in% colnames.methods)){lines(betaX,mat_total2[,"BDCD.Ratio.S"],col="yellow4",pch=6,lty=1,type="b", lwd=2.4)}
-    if( ("BDCD.Egger.S" %in% colnames.methods)){lines(betaX,mat_total2[,"BDCD.Egger.S"],col="yellow3",pch=0,lty=4,type="b", lwd=2.4)}
-    
-    dev.off()
-    
-    #########################################
-    # legend
-    #########################################
-    pdf(paste(path1,"Legend_nSim",nSim,"seed",SEED ,"nX",nX,"nY",nY,"nSNPX", length(MAF_GX),"nSNPY", length(MAF_GY), "contX", contX, "contY",contY,"u",unmeasuredConfounding, "me",measurementError,"p",pl, "l1", long1, "l2",long2,"dx", deltaX, "bU", betaU, "gU",gammaU,"bX",betaGX[1]*100, "gY", gammaGY[1]*100,"eGX", etaGX[1]*100, "eGY", etaGY[1]*100,".pdf", sep = ""))
-    plot(NULL, xlim=0:1, ylim=0:1, ylab='', xlab='', xaxt='n', yaxt='n', bty='n')
-    legend("topleft", xpd=T,legend = c("MR Steiger IVW", "MR Steiger weighted median", "MR Steiger Egger",
-                                       "CD-Ratio", "CD-Egger", "CD-GLS",
-                                       "CD-cML (screening, data perturbation)", "MR-cML (screening, data perturbation)",
-                                       "CD-Ratio (screening)", "CD-Egger (screening)",
-                                       "Bi-MR IVW", "Bi-MR IVW MRE", "Bi-MR IVW FE",
-                                       "Bi-MR Egger", "Bi-MR Egger Boot",
-                                       "Bi-MR weighted median", "Bi-MR simple median", "Bi-MR penalized weighted median",
-                                       "Bi-MR unweighted regression"),
-           pch = c(1,3,4,
-                   1,3,4,
-                   2,3,6,0,
-                   3,4,6,
-                   1,4,
-                   4,6,0,
-                   1),
-           
-           lty = c(2,3,4,1,2,3,2,1,1,4,1,4,1,1,2,3,4,5,1),
-           col = c("blue4","steelblue1","darkslategray2",
-                   "darkorange2","darkorange1","orange2",
-                   "goldenrod3","goldenrod1","yellow4","yellow3",
-                   "plum2","mediumpurple3","mediumorchid1",
-                   "deeppink2","firebrick1",
-                   "darkgreen","chartreuse2","lightgreen","black"),
-           cex=0.6,
-           lwd=1.4)
-    dev.off() 
-    
+    if(plot.pdf){
+        #########################################
+        # case 1 plot
+        #########################################
+        pdf(paste(path1,"Plot_Case1nSim",nSim,"seed",SEED ,"nX",nX,"nY",nY,"nSNPX", length(MAF_GX),"nSNPY", length(MAF_GY), "contX", contX, "contY",contY,"u",unmeasuredConfounding, "me",measurementError,"p",pl, "l1", long1, "l2",long2,"dx", deltaX, "bU", betaU, "gU",gammaU,"bX",betaGX[1]*100, "gY", gammaGY[1]*100,"eGX", etaGX[1]*100, "eGY", etaGY[1]*100,".pdf", sep = ""))
+        
+        plot(-2,-2,xlim=c(min(betaX),max(betaX)),ylim=c(0,1.1),main="",xlab=expression(beta[X]),ylab="Proportion of Simulations")
+        
+        if( ("MRS.ivw" %in% colnames.methods)){lines(betaX,mat_total1[,"MRS.ivw"],col="blue4",pch=1,lty=2,type="b", lwd=2.4)}
+        if( ("MRS.wMedian" %in% colnames.methods)){lines(betaX,mat_total1[,"MRS.wMedian"],col="steelblue1",pch=3,lty=3,type="b", lwd=2.4)}
+        if( ("MRS.Egger" %in% colnames.methods)){lines(betaX,mat_total1[,"MRS.Egger"],col="darkslategray2",pch=4,lty=4,type="b", lwd=2.4)}
+        
+        # CD methods - pch=2; PURPLES!!! -- dark purple, bright purple, medium purple
+        if( ("CDRatio" %in% colnames.methods)){lines(betaX,mat_total1[,"CDRatio"],col="darkorange2",pch=1,lty=1,type="b", lwd=2.4)}
+        if( ("CDEgger" %in% colnames.methods)){lines(betaX,mat_total1[,"CDEgger"],col="darkorange1",pch=3,lty=2,type="b", lwd=2.4)}
+        if( ("CDgls" %in% colnames.methods)){lines(betaX,mat_total1[,"CDgls"],col="orange2",pch=4,lty=3,type="b", lwd=2.4)}
+        
+        # Bi-directional methods - reds/pinks for TSMR, reds/browns for MR
+        # IVW methods - pch=4; REDS
+        if( ("tsmr_IVW" %in% colnames.methods)){lines(betaX,mat_total1[,"tsmr_IVW"],col="plum2",pch=3,lty=1,type="b", lwd=2.4)}
+        if( ("tsmr_IVW_mre" %in% colnames.methods)){lines(betaX,mat_total1[,"tsmr_IVW_mre"],col="mediumpurple3",pch=4,lty=4,type="b", lwd=2.4)}
+        if( ("tsmr_IVW_fe" %in% colnames.methods)){lines(betaX,mat_total1[,"tsmr_IVW_fe"],col="mediumorchid1",pch=6,lty=1,type="b", lwd=2.4)}
+        ##########
+        # Egger methods - pch = 0
+        if( ("tsmr_Egger" %in% colnames.methods)){lines(betaX,mat_total1[,"tsmr_Egger"],col="deeppink2",pch=1,lty=1,type="b", lwd=2.4)}
+        if( ("tsmr_Egger_Boot" %in% colnames.methods)){lines(betaX,mat_total1[,"tsmr_Egger_Boot"],col="firebrick1",pch=4,lty=2,type="b", lwd=2.4)}
+        
+        # median methods - pch=6 & 8
+        if( ("tsmr_weighted_median" %in% colnames.methods)){lines(betaX,mat_total1[,"tsmr_weighted_median"],col="darkgreen",pch=4,lty=3,type="b", lwd=2.4)}
+        if( ("tsmr_simple_median" %in% colnames.methods)){lines(betaX,mat_total1[,"tsmr_simple_median"],col="chartreuse2",pch=6,lty=4,type="b", lwd=2.4)}
+        if( ("tsmr_pwm" %in% colnames.methods)){lines(betaX,mat_total1[,"tsmr_pwm"],col="lightgreen",pch=0,lty=5,type="b", lwd=2.4)}
+        
+        # other tsmr methods - pch=7
+        if( ("tsmr_uwr" %in% colnames.methods)){lines(betaX,mat_total1[,"tsmr_uwr"],col="black",pch=1,lty=1,type="b", lwd=2.4)}
+        
+        if( ("BDCDcML.S.DP" %in% colnames.methods)){lines(betaX,mat_total1[,"BDCDcML.S.DP"],col="goldenrod3",pch=2,lty=2,type="b", lwd=2.4)}
+        if( ("BDMRcML.S.DP" %in% colnames.methods)){lines(betaX,mat_total1[,"BDMRcML.S.DP"],col="goldenrod1",pch=3,lty=1,type="b", lwd=2.4)}
+        if( ("BDCD.Ratio.S" %in% colnames.methods)){lines(betaX,mat_total1[,"BDCD.Ratio.S"],col="yellow4",pch=6,lty=1,type="b", lwd=2.4)}
+        if( ("BDCD.Egger.S" %in% colnames.methods)){lines(betaX,mat_total1[,"BDCD.Egger.S"],col="yellow3",pch=0,lty=4,type="b", lwd=2.4)}
+        
+        dev.off()
+        
+        #########################################
+        # case 2 plot
+        #########################################
+        pdf(paste(path1,"Plot_Case2nSim",nSim,"seed",SEED ,"nX",nX,"nY",nY,"nSNPX", length(MAF_GX),"nSNPY", length(MAF_GY), "contX", contX, "contY",contY,"u",unmeasuredConfounding, "me",measurementError,"p",pl, "l1", long1, "l2",long2,"dx", deltaX, "bU", betaU, "gU",gammaU,"bX",betaGX[1]*100, "gY", gammaGY[1]*100,"eGX", etaGX[1]*100, "eGY", etaGY[1]*100,".pdf", sep = ""))
+        plot(-2,-2,xlim=c(min(betaX),max(betaX)),ylim=c(0,1.1),main="",xlab=expression(beta[X]),ylab="Proportion of Simulations")
+        ###########
+        
+        if( ("MRS.ivw" %in% colnames.methods)){lines(betaX,mat_total2[,"MRS.ivw"],col="blue4",pch=1,lty=2,type="b", lwd=2.4)}
+        if( ("MRS.wMedian" %in% colnames.methods)){lines(betaX,mat_total2[,"MRS.wMedian"],col="steelblue1",pch=3,lty=3,type="b", lwd=2.4)}
+        if( ("MRS.Egger" %in% colnames.methods)){lines(betaX,mat_total2[,"MRS.Egger"],col="darkslategray2",pch=4,lty=4,type="b", lwd=2.4)}
+        
+        # CD methods - pch=2; PURPLES!!! -- dark purple, bright purple, medium purple
+        if( ("CDRatio" %in% colnames.methods)){lines(betaX,mat_total2[,"CDRatio"],col="darkorange2",pch=1,lty=1,type="b", lwd=2.4)}
+        if( ("CDEgger" %in% colnames.methods)){lines(betaX,mat_total2[,"CDEgger"],col="darkorange1",pch=3,lty=2,type="b", lwd=2.4)}
+        if( ("CDgls" %in% colnames.methods)){lines(betaX,mat_total2[,"CDgls"],col="orange2",pch=4,lty=3,type="b", lwd=2.4) }
+        
+        # Bi-directional methods - reds/pinks for TSMR, reds/browns for MR
+        # IVW methods - pch=4; REDS
+        if( ("tsmr_IVW" %in% colnames.methods)){lines(betaX,mat_total2[,"tsmr_IVW"],col="plum2",pch=3,lty=1,type="b", lwd=2.4)}
+        if( ("tsmr_IVW_mre" %in% colnames.methods)){lines(betaX,mat_total2[,"tsmr_IVW_mre"],col="mediumpurple3",pch=4,lty=4,type="b", lwd=2.4)}
+        if( ("tsmr_IVW_fe" %in% colnames.methods)){lines(betaX,mat_total2[,"tsmr_IVW_fe"],col="mediumorchid1",pch=6,lty=1,type="b", lwd=2.4)}
+        ##########
+        # Egger methods - pch = 0
+        if( ("tsmr_Egger" %in% colnames.methods)){lines(betaX,mat_total2[,"tsmr_Egger"],col="deeppink2",pch=1,lty=1,type="b", lwd=2.4)}
+        if( ("tsmr_Egger_Boot" %in% colnames.methods)){lines(betaX,mat_total2[,"tsmr_Egger_Boot"],col="firebrick1",pch=4,lty=2,type="b", lwd=2.4)}
+        
+        # median methods - pch=6 & 8
+        if( ("tsmr_weighted_median" %in% colnames.methods)){lines(betaX,mat_total2[,"tsmr_weighted_median"],col="darkgreen",pch=4,lty=3,type="b", lwd=2.4)}
+        if( ("tsmr_simple_median" %in% colnames.methods)){lines(betaX,mat_total2[,"tsmr_simple_median"],col="chartreuse2",pch=6,lty=4,type="b", lwd=2.4)}
+        if( ("tsmr_pwm" %in% colnames.methods)){lines(betaX,mat_total2[,"tsmr_pwm"],col="lightgreen",pch=0,lty=5,type="b", lwd=2.4)}
+        
+        # other tsmr methods - pch=7
+        if( ("tsmr_uwr" %in% colnames.methods)){lines(betaX,mat_total2[,"tsmr_uwr"],col="black",pch=1,lty=1,type="b", lwd=2.4)}
+        
+        if( ("BDCDcML.S.DP" %in% colnames.methods)){lines(betaX,mat_total2[,"BDCDcML.S.DP"],col="goldenrod3",pch=2,lty=2,type="b", lwd=2.4)}
+        if( ("BDMRcML.S.DP" %in% colnames.methods)){lines(betaX,mat_total2[,"BDMRcML.S.DP"],col="goldenrod1",pch=3,lty=1,type="b", lwd=2.4)}
+          
+        if( ("BDCD.Ratio.S" %in% colnames.methods)){lines(betaX,mat_total2[,"BDCD.Ratio.S"],col="yellow4",pch=6,lty=1,type="b", lwd=2.4)}
+        if( ("BDCD.Egger.S" %in% colnames.methods)){lines(betaX,mat_total2[,"BDCD.Egger.S"],col="yellow3",pch=0,lty=4,type="b", lwd=2.4)}
+        
+        dev.off()
+        
+        #########################################
+        # legend
+        #########################################
+        pdf(paste(path1,"Legend_nSim",nSim,"seed",SEED ,"nX",nX,"nY",nY,"nSNPX", length(MAF_GX),"nSNPY", length(MAF_GY), "contX", contX, "contY",contY,"u",unmeasuredConfounding, "me",measurementError,"p",pl, "l1", long1, "l2",long2,"dx", deltaX, "bU", betaU, "gU",gammaU,"bX",betaGX[1]*100, "gY", gammaGY[1]*100,"eGX", etaGX[1]*100, "eGY", etaGY[1]*100,".pdf", sep = ""))
+        plot(NULL, xlim=0:1, ylim=0:1, ylab='', xlab='', xaxt='n', yaxt='n', bty='n')
+        legend("topleft", xpd=T,legend = c("MR Steiger IVW", "MR Steiger weighted median", "MR Steiger Egger",
+                                           "CD-Ratio", "CD-Egger", "CD-GLS",
+                                           "CD-cML (screening, data perturbation)", "MR-cML (screening, data perturbation)",
+                                           "CD-Ratio (screening)", "CD-Egger (screening)",
+                                           "Bi-MR IVW", "Bi-MR IVW MRE", "Bi-MR IVW FE",
+                                           "Bi-MR Egger", "Bi-MR Egger Boot",
+                                           "Bi-MR weighted median", "Bi-MR simple median", "Bi-MR penalized weighted median",
+                                           "Bi-MR unweighted regression"),
+               pch = c(1,3,4,
+                       1,3,4,
+                       2,3,6,0,
+                       3,4,6,
+                       1,4,
+                       4,6,0,
+                       1),
+               
+               lty = c(2,3,4,1,2,3,2,1,1,4,1,4,1,1,2,3,4,5,1),
+               col = c("blue4","steelblue1","darkslategray2",
+                       "darkorange2","darkorange1","orange2",
+                       "goldenrod3","goldenrod1","yellow4","yellow3",
+                       "plum2","mediumpurple3","mediumorchid1",
+                       "deeppink2","firebrick1",
+                       "darkgreen","chartreuse2","lightgreen","black"),
+               cex=0.6,
+               lwd=1.4)
+        dev.off()
+    }
     
     # save matrices
     write.table(mat_total1,file=paste0(path1,"matCase1nSim", nSim,"seed",SEED ,"nX",nX,"nY",nY,"nSNPX", length(MAF_GX),"nSNPY", length(MAF_GY), "contX", contX, "contY",contY,"u",unmeasuredConfounding, "me",measurementError,"p",pl, "l1", long1, "l2",long2,"dx", deltaX, "bU", betaU, "gU",gammaU,"bX",betaGX[1]*100, "gY", gammaGY[1]*100,"eGX", etaGX[1]*100, "eGY", etaGY[1]*100,".txt"), quote=F, row.names = F)
