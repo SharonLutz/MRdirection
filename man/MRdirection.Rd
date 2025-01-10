@@ -1,11 +1,13 @@
 \name{MRdirection}
 \alias{MRdirection}
-\title{MRdirection}
+\title{
+MRDirection
+}
 \description{
 Runs multiple MR approaches on simulated data for a user specified scenario and for each method returns the number of simulations that returned case 1 (X --> Y), case 2 (Y --> X), or an error.
 }
 \usage{
-MRdirection(nSim = 10, nX = 1000, nY = 1000, MAF_GX = rep(0.5, 10), MAF_GY = rep(0.5, 10), gamma0 = 0, gammaGX = rep(0.2, 10), gammaGY = rep(0, 10), measurementError = F, delta0 = 0, deltaX = 1, varME = 1, beta0 = 0, betaX = seq(0, 2, by = 0.5), betaGX = rep(0, 10), betaGY = rep(0.2, 10), varY = 0.2, varX = 1, unmeasuredConfounding = F, meanU = 0, varU = 1, gammaU = 1, betaU = 1, eta0 = 0, etaGX = rep(0.2, 10), etaGY = rep(0, 10), snpEffectConfounder = F, long1 = F, long2 = F, kappa0 = 0, kappaY = 0.2, iota0 = 0, iotaX = 0.2, sig.level = 0.05, contX = TRUE, contY = TRUE, nSimTotal = 500, runMethods = "All", SEED = 1, path1, libPath = NULL)
+MRdirection(nSim = 10, nX = 1000, nY = 1000, MAF_GX = rep(0.5, 10), MAF_GY = rep(0.5, 10), gamma0 = 0, gammaGX = rep(0.2, 10), gammaGY = rep(0, 10), measurementError = F, delta0 = 0, deltaX = 1, varME = 1, beta0 = 0, betaX = seq(0, 2, by = 0.5), betaGX = rep(0, 10), betaGY = rep(0.2, 10), varY = 0.2, varX = 1, unmeasuredConfounding = F, meanU = 0, varU = 1, gammaU = 1, betaU = 1, eta0 = 0, etaGX = rep(0.2, 10), etaGY = rep(0, 10), snpEffectConfounder = F, long1 = F, long2 = F, kappa0 = 0, kappaY = 0.2, iota0 = 0, iotaX = 0.2, sig.level = 0.05, contX = TRUE, contY = TRUE, nSimTotal = 500, runMethods = "All", SEED = 1, path1, libPath = NULL, plot.pdf = F)
 }
 \arguments{
   \item{nSim}{
@@ -139,8 +141,7 @@ is the methods to be run. If all methods should be run, runMethods="All" (this i
 "tsmr_pwm": : will run the bidirectional MR penalized weighted median method from the TwoSampleMR package; 
 "tsmr_Egger": will run the bidirectional MR Egger method from the TwoSampleMR package; 
 "tsmr_Egger_Boot": will run the bidirectional MR Egger Boot method from the TwoSampleMR package; 
-"tsmr_uwr": will run the bidirectional MR unweighted ression method from the TwoSampleMR package.
-}
+"tsmr_uwr": will run the bidirectional MR unweighted ression method from the TwoSampleMR package.}
   \item{SEED}{
 is the seed for the random number generator
 }
@@ -150,7 +151,11 @@ is the path to directory where .txt file output and plots should be saved.
   \item{libPath}{
 is the path to directory packages are saved in if saved outside standard library directory. Leave as NULL if packages are saved in standard library directory.
 }
+  \item{plot.pdf}{
+if TRUE, plots will be saved to the path1 directory.
 }
+}
+
 \details{
 This function outputs matrices of the number of simulations where case 1 (X --> Y), case 2(Y --> X), or an error is detected by using the MR methods specified by the user. These 3 matrices are also saved as .txt files to the path1 location.
 This function also outputs plots of case 1 and case 2, which are saved to the the path1 location specified by the user.
