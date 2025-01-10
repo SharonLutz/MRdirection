@@ -1127,7 +1127,7 @@ function(nSim=10, nX=1000, nY=1000,
     #########################################
     # legend
     #########################################
-    pdf(paste("Legend_nSim",nSim,"seed",SEED ,"nX",nX,"nY",nY,"nSNPX", length(MAF_GX),"nSNPY", length(MAF_GY), "contX", contX, "contY",contY,"u",unmeasuredConfounding, "me",measurementError,"p",pl, "l1", long1, "l2",long2,"dx", deltaX, "bU", betaU, "gU",gammaU,"bX",betaGX[1]*100, "gY", gammaGY[1]*100,"eGX", etaGX[1]*100, "eGY", etaGY[1]*100,".pdf", sep = ""))
+    pdf(paste(path1,"Legend_nSim",nSim,"seed",SEED ,"nX",nX,"nY",nY,"nSNPX", length(MAF_GX),"nSNPY", length(MAF_GY), "contX", contX, "contY",contY,"u",unmeasuredConfounding, "me",measurementError,"p",pl, "l1", long1, "l2",long2,"dx", deltaX, "bU", betaU, "gU",gammaU,"bX",betaGX[1]*100, "gY", gammaGY[1]*100,"eGX", etaGX[1]*100, "eGY", etaGY[1]*100,".pdf", sep = ""))
     plot(NULL, xlim=0:1, ylim=0:1, ylab='', xlab='', xaxt='n', yaxt='n', bty='n')
     legend("topleft", xpd=T,legend = c("MR Steiger IVW", "MR Steiger weighted median", "MR Steiger Egger",
                                        "CD-Ratio", "CD-Egger", "CD-GLS",
